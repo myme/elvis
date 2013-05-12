@@ -42,6 +42,29 @@ buster.testCase 'el',
         tagName: 'span'
         className: 'class'
 
+  'can append':
+
+    'element text as second argument': ->
+      element = el('div', 'foo bar')
+      assert.tagName(element, 'div')
+      assert.equals(element.innerHTML, 'foo bar')
+
+    'element text as array of text': ->
+      element = el('div', [ 'foo', ' ', 'bar' ])
+      assert.tagName(element, 'div')
+      assert.equals(element.innerHTML, 'foo bar')
+
+    'element child': ->
+      element = el('div', el('em', 'foo'))
+      assert.equals(element.innerHTML, '<em>foo</em>')
+
+    'array of children': ->
+      element = el('div', [
+        el('em', 'foo')
+        ' bar'
+      ])
+      assert.equals(element.innerHTML, '<em>foo</em> bar')
+
   'doest not call .setAttr with no id or classes': ->
     stub = @stub(el, 'setAttr')
     el()
