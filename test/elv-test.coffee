@@ -65,6 +65,26 @@ buster.testCase 'el',
       ])
       assert.equals(element.innerHTML, '<em>foo</em> bar')
 
+  'can modify element':
+
+    'setting text content': ->
+      element = el('div', 'foo')
+      el(element, 'bar')
+      assert.equals(element.innerHTML, 'bar')
+
+    'setting HTML content': ->
+      element = el('div', 'foo')
+      el(element, el('em', 'foo'))
+      assert.equals(element.innerHTML, '<em>foo</em>')
+
+    'setting array of HTML content': ->
+      element = el('div', 'foo')
+      el(element, [
+        el('em', 'foo')
+        ' bar'
+      ])
+      assert.equals(element.innerHTML, '<em>foo</em> bar')
+
   'doest not call .setAttr with no id or classes': ->
     stub = @stub(el, 'setAttr')
     el()
@@ -102,6 +122,18 @@ buster.testCase 'el.setAttr',
     element = el()
     el.setAttr(element, 'text', '<em>foo</em> bar')
     assert.equals(element.innerHTML, '&lt;em&gt;foo&lt;/em&gt; bar')
+
+  'can set HTML content from DOM element': ->
+    element = el()
+    el.setAttr(element, 'html', el('em', 'foo'))
+    assert.equals(element.innerHTML, '<em>foo</em>')
+
+  '// can set multiple attributes': ->
+    element = el()
+    el.setAttr(element, id: 'some-id', className: 'class')
+    assert.match element,
+      id: 'some-id'
+      className: 'class'
 
 
 buster.testCase 'el.getAttr',

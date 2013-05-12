@@ -2,11 +2,11 @@ doc = @document
 
 
 isElement = (el) ->
-  el.nodeType and el.nodeType is doc.ELEMENT_NODE
+  el?.nodeType and el.nodeType is doc.ELEMENT_NODE
 
 
 isText = (el) ->
-  el.nodeType and el.nodeType is doc.TEXT_NODE
+  el?.nodeType and el.nodeType is doc.TEXT_NODE
 
 
 normalizeArguments = (args) ->
@@ -48,15 +48,19 @@ textNode = (text) ->
   doc.createTextNode(text)
 
 
-@el = element = (tagSpec, args...) ->
+@el = element = (tagSpecOrEl, args...) ->
   [attributes, children] = normalizeArguments(args)
-  [tag, id, classes] = parseTagSpec(tagSpec)
 
-  el = doc.createElement(tag)
-  element.setAttr(el, 'id', id) if id
-  element.setAttr(el, 'className', classes.join(' ')) if classes.length
+  if isElement(tagSpecOrEl)
+    el = tagSpecOrEl
+  else
+    [tag, id, classes] = parseTagSpec(tagSpecOrEl)
+    el = doc.createElement(tag)
+    element.setAttr(el, 'id', id) if id
+    element.setAttr(el, 'className', classes.join(' ')) if classes.length
 
-  element.appendChildren(el, children)
+  if children.length
+    exports.setAttr(el, 'html', children)
 
   el
 
@@ -87,4 +91,11 @@ directAttributes =
 @el.setAttr = (el, attr, value) ->
   directAttr = directAttributes[attr]
   if directAttr
-    el[directAttr] = value
+    if attr is 'html' and typeof value isnt 'string'
+      el.innerHTML = ''
+      if isElement(value)
+        el.appendChild(value)
+      else if value instanceof Array
+        exports.appendChildren(el, value)
+    else
+      el[directAttr] = value
