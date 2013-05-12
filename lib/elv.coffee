@@ -48,7 +48,7 @@ textNode = (text) ->
   doc.createTextNode(text)
 
 
-@el = element = (tagSpecOrEl, args...) ->
+@el = exports = (tagSpecOrEl, args...) ->
   [attributes, children] = normalizeArguments(args)
 
   if isElement(tagSpecOrEl)
@@ -56,8 +56,8 @@ textNode = (text) ->
   else
     [tag, id, classes] = parseTagSpec(tagSpecOrEl)
     el = doc.createElement(tag)
-    element.setAttr(el, 'id', id) if id
-    element.setAttr(el, 'className', classes.join(' ')) if classes.length
+    exports.setAttr(el, 'id', id) if id
+    exports.setAttr(el, 'className', classes.join(' ')) if classes.length
 
   if children.length
     exports.setAttr(el, 'html', children)
@@ -72,7 +72,7 @@ directAttributes =
   'text': 'textContent'
 
 
-@el.appendChildren = (el, children) ->
+exports.appendChildren = (el, children) ->
   if children.length
     fragment = doc.createDocumentFragment()
     for child in children
@@ -82,13 +82,13 @@ directAttributes =
     el.appendChild(fragment)
 
 
-@el.getAttr = (el, attr) ->
+exports.getAttr = (el, attr) ->
   directAttr = directAttributes[attr]
   if directAttr
     el[directAttr]
 
 
-@el.setAttr = (el, attr, value) ->
+exports.setAttr = (el, attr, value) ->
   directAttr = directAttributes[attr]
   if directAttr
     if attr is 'html' and typeof value isnt 'string'
