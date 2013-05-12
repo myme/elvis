@@ -128,7 +128,7 @@ buster.testCase 'el.setAttr',
     el.setAttr(element, 'html', el('em', 'foo'))
     assert.equals(element.innerHTML, '<em>foo</em>')
 
-  '// can set multiple attributes': ->
+  'can set multiple attributes': ->
     element = el()
     el.setAttr(element, id: 'some-id', className: 'class')
     assert.match element,

@@ -88,14 +88,19 @@ exports.getAttr = (el, attr) ->
     el[directAttr]
 
 
-exports.setAttr = (el, attr, value) ->
-  directAttr = directAttributes[attr]
-  if directAttr
-    if attr is 'html' and typeof value isnt 'string'
-      el.innerHTML = ''
-      if isElement(value)
-        el.appendChild(value)
-      else if value instanceof Array
-        exports.appendChildren(el, value)
-    else
-      el[directAttr] = value
+exports.setAttr = (el, args...) ->
+  if args.length is 1
+    for own attr, value of args[0]
+      exports.setAttr(el, attr, value)
+  else
+    [attr, value] = args
+    directAttr = directAttributes[attr]
+    if directAttr
+      if attr is 'html' and typeof value isnt 'string'
+        el.innerHTML = ''
+        if isElement(value)
+          el.appendChild(value)
+        else if value instanceof Array
+          exports.appendChildren(el, value)
+      else
+        el[directAttr] = value
