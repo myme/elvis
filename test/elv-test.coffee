@@ -16,6 +16,12 @@ buster.testCase 'el',
     'a span': ->
       assert.match(el('span').tagName, 'span')
 
+    'does not add id attribute by default': ->
+      refute(el().hasAttribute('id'))
+
+    'does not add className attribute by default': ->
+      refute(el().hasAttribute('className'))
+
     'div with class': ->
       assert.match el('.class'),
         tagName: 'div'
@@ -84,21 +90,6 @@ buster.testCase 'el',
         ' bar'
       ])
       assert.equals(element.innerHTML, '<em>foo</em> bar')
-
-  'doest not call .setAttr with no id or classes': ->
-    stub = @stub(el, 'setAttr')
-    el()
-    refute.called(stub)
-
-  'calls .setAttr for setting id': ->
-    stub = @stub(el, 'setAttr')
-    element = el('#some-id')
-    assert.calledOnceWith(stub, element, 'id', 'some-id')
-
-  'calls .setAttr for setting className': ->
-    stub = @stub(el, 'setAttr')
-    element = el('.class1.class2')
-    assert.calledOnceWith(stub, element, 'className', 'class1 class2')
 
 
 buster.testCase 'el.setAttr',

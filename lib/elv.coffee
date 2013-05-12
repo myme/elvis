@@ -9,6 +9,13 @@ isText = (el) ->
   el?.nodeType and el.nodeType is doc.TEXT_NODE
 
 
+merge = (left, right) ->
+  dest = {}
+  dest[attr] = value for own attr, value of left
+  dest[attr] = value for own attr, value of right
+  dest
+
+
 normalizeArguments = (args) ->
   attributes = {}
   children = []
@@ -28,20 +35,21 @@ normalizeArguments = (args) ->
 
 parseTagSpec = (tagSpec) ->
   tag = 'div'
-  id = null
+  attributes = {}
   classes = []
 
   if tagSpec
     for match in tagSpec.match(/[.#]?(\w|-)+/g)
       switch match.substr(0, 1)
         when '#'
-          id = match.substr(1)
+          attributes.id = match.substr(1)
         when '.'
           classes.push(match.substr(1))
         else
           tag = match
+    attributes.className = classes.join(' ') if classes.length
 
-  [tag, id, classes]
+  [tag, attributes]
 
 
 textNode = (text) ->
@@ -54,13 +62,12 @@ textNode = (text) ->
   if isElement(tagSpecOrEl)
     el = tagSpecOrEl
   else
-    [tag, id, classes] = parseTagSpec(tagSpecOrEl)
+    [tag, tagAttrs] = parseTagSpec(tagSpecOrEl)
+    attributes = merge(attributes, tagAttrs)
     el = doc.createElement(tag)
-    exports.setAttr(el, 'id', id) if id
-    exports.setAttr(el, 'className', classes.join(' ')) if classes.length
 
-  if children.length
-    exports.setAttr(el, 'html', children)
+  attributes.html = children if children.length
+  exports.setAttr(el, attributes)
 
   el
 
