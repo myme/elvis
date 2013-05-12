@@ -1,0 +1,24 @@
+{
+  "name": "elv.js",
+  "version": "0.0.0",
+  "description": "Generate DOM without templates",
+  "scripts": {
+    "start": "grunt watch",
+    "test": "grunt test"
+  },
+  "repository": "",
+  "keywords": [
+    "dom"
+  ],
+  "author": "Martin Øinæs Myrseth",
+  "license": "ISC",
+  "devDependencies": {
+    "buster": "~0.6.12",
+    "grunt": "~0.4.1",
+    "grunt-buster": "~0.1.2",
+    "grunt-cli": "~0.1.8",
+    "grunt-contrib-coffee": "~0.7.0",
+    "grunt-contrib-watch": "~0.4.3",
+    "phantomjs": "~1.9.0-3"
+  }
+}
