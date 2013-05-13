@@ -164,3 +164,31 @@ buster.testCase 'el.getAttr',
     element = el()
     el.setAttr(element, 'html', '<em>foo</em> bar')
     assert.equals(el.getAttr(element, 'text'), 'foo bar')
+
+
+buster.testCase 'el.registerPlugin',
+
+  'can register plugin called on appended elements': ->
+    el.registerPlugin(spy = @spy())
+    el('div', [ 'foo', 'bar' ])
+    assert.calledTwice(spy)
+    assert.calledWith(spy, 'foo')
+    assert.calledWith(spy, 'bar')
+
+  'can register plugin replacing elements': ->
+    children = [
+      el('span', 'baz')
+      el('span', 'quux')
+    ]
+    el.registerPlugin((child) -> children.shift())
+    assert.match el('div', [ 'foo', 'bar' ]),
+      innerHTML: '<span>baz</span><span>quux</span>'
+
+
+buster.testCase 'el.resetPlugins',
+
+  'removes registered plugins': ->
+    el.registerPlugin(spy = @spy())
+    el.resetPlugins()
+    el('div', [ 'foo', 'bar' ])
+    refute.called(spy)

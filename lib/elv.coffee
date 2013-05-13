@@ -123,6 +123,8 @@ exports.registerPlugin = (plugin) ->
   plugins.unshift(plugin)
 
 
-exports.registerPlugin (child) ->
-  return textNode(child) if typeof child is 'string'
-  null
+do exports.resetPlugins = ->
+  plugins = []
+  exports.registerPlugin (child) ->
+    return textNode(child) if typeof child is 'string'
+    null
