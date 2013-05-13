@@ -79,12 +79,18 @@ directAttributes =
   'text': 'textContent'
 
 
+plugins = []
+
+
 exports.appendChildren = (el, children) ->
   if children.length
     fragment = doc.createDocumentFragment()
     for child in children
-      if typeof child is 'string'
-        child = textNode(child)
+      for plugin in plugins
+        value = plugin(child)
+        if value
+          child = value
+          break
       fragment.appendChild(child)
     el.appendChild(fragment)
 
@@ -111,3 +117,12 @@ exports.setAttr = (el, args...) ->
           exports.appendChildren(el, value)
       else
         el[directAttr] = value
+
+
+exports.registerPlugin = (plugin) ->
+  plugins.unshift(plugin)
+
+
+exports.registerPlugin (child) ->
+  return textNode(child) if typeof child is 'string'
+  null
