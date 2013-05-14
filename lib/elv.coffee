@@ -29,6 +29,8 @@ normalizeArguments = (args) ->
       children = [ args[0] ]
     else if args[0] instanceof Array
       children = args[0]
+    else if typeof args[0] is 'object'
+      attributes = args[0]
 
   [attributes, children]
 
@@ -76,7 +78,7 @@ textNode = (text) ->
     el = tagSpecOrEl
   else
     [tag, tagAttrs] = parseTagSpec(tagSpecOrEl)
-    attributes = merge(attributes, tagAttrs)
+    attributes = merge(tagAttrs, attributes)
     el = doc.createElement(tag)
 
   attributes.html = children if children.length

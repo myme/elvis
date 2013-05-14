@@ -68,6 +68,34 @@ buster.testCase 'el',
         name: 'verify'
         type: 'password'
 
+  'can set':
+
+    'tag with attributes': ->
+      assert.match el('a', href: '/foo/bar'),
+        tagName: 'a'
+        href: '/foo/bar'
+
+    'tag with id set through attributes': ->
+      assert.match el('div#foo', id: 'bar'),
+        tagName: 'div'
+        id: 'bar'
+
+    'tag with className set through attributes': ->
+      assert.match el('div.foo', className: 'bar'),
+        tagName: 'div'
+        className: 'bar'
+
+    'tag with tag attributes overridden': ->
+      assert.match el('a(href="/foo/bar")', href: '/baz/quux'),
+        tagName: 'a'
+        href: '/baz/quux'
+
+    'tag with attributes and children': ->
+      assert.match el('a', { href: '/foo/bar' }, [ 'foo', ' ', 'bar' ]),
+        tagName: 'a'
+        href: '/foo/bar'
+        innerHTML: 'foo bar'
+
   'can append':
 
     'element text as second argument': ->
