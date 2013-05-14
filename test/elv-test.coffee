@@ -146,6 +146,11 @@ buster.testCase 'el.setAttr',
       id: 'some-id'
       className: 'class'
 
+  'can set href on anchor': ->
+    element = el('a')
+    el.setAttr(element, href: '/foo/bar')
+    assert.match(element, href: '/foo/bar')
+
 
 buster.testCase 'el.getAttr',
 

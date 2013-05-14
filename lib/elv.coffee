@@ -108,7 +108,10 @@ exports.setAttr = (el, args...) ->
   else
     [attr, value] = args
     directAttr = directAttributes[attr]
-    if directAttr
+
+    if not directAttr
+      el.setAttribute(attr, value)
+    else
       if attr is 'html' and typeof value isnt 'string'
         el.innerHTML = ''
         if isElement(value)
