@@ -33,18 +33,31 @@ normalizeArguments = (args) ->
   [attributes, children]
 
 
+parseAttrString = (attrStr) ->
+  attributes = {}
+
+  for pair in attrStr.split(',')
+    [key, value] = pair.split('=')
+    attributes[key] = value.replace(/^"(.*)"$/, '$1')
+
+  attributes
+
+
 parseTagSpec = (tagSpec) ->
   tag = 'div'
   attributes = {}
   classes = []
 
   if tagSpec
-    for match in tagSpec.match(/[.#]?(\w|-)+/g)
+    for match in tagSpec.match /\([^)]+\)|[.#]?(\w|-)+/g
       switch match.substr(0, 1)
         when '#'
           attributes.id = match.substr(1)
         when '.'
           classes.push(match.substr(1))
+        when '('
+          tagAttrs = parseAttrString(match.substr(1, match.length - 2))
+          attributes = merge(attributes, tagAttrs)
         else
           tag = match
     attributes.className = classes.join(' ') if classes.length

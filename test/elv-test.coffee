@@ -48,25 +48,25 @@ buster.testCase 'el',
         tagName: 'span'
         className: 'class'
 
-    '// anchor with href': ->
+    'anchor with href': ->
       assert.match el('a(href="/foo/bar")', 'baz'),
         tagName: 'a'
         href: '/foo/bar'
         innerHTML: 'baz'
 
-    '// input with name and type': ->
+    'input with name and type': ->
       assert.match el('input(name="verify",type="password")'),
         tagName: 'input'
         name: 'verify'
         type: 'password'
 
-    '// anchor with id, classes, attribute value and inner text': ->
-      assert.match el('a.class1#link.class2(href="/foo/bar")', 'baz')
-        tagName: 'a'
-        id: 'link'
+    'anchor with id, classes, attribute value and inner text': ->
+      assert.match el('input#verify-password.class1.class2(name="verify",type="password")', 'baz'),
+        tagName: 'input'
+        id: 'verify-password'
         className: 'class1 class2'
-        href: '/foo/bar'
-        innerHTML: 'baz'
+        name: 'verify'
+        type: 'password'
 
   'can append':
 
