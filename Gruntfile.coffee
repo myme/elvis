@@ -9,6 +9,11 @@ module.exports = (grunt) ->
         files:
           'dist/elv-test.js': ['test/**/*.coffee']
 
+    uglify:
+      dist:
+        files:
+          'dist/elv.min.js': 'dist/elv.js'
+
     watch:
       test:
         files: [
@@ -19,7 +24,9 @@ module.exports = (grunt) ->
 
   grunt.loadNpmTasks('grunt-buster')
   grunt.loadNpmTasks('grunt-contrib-coffee')
+  grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-watch')
 
   grunt.registerTask('test', ['coffee', 'buster'])
-  grunt.registerTask('default', ['test'])
+  grunt.registerTask('build', ['test', 'uglify'])
+  grunt.registerTask('default', ['build'])
