@@ -103,9 +103,7 @@ exports.appendChildren = (el, children) ->
     for child in children
       for plugin in plugins
         value = plugin(child)
-        if value
-          child = value
-          break
+        child = value if value
       fragment.appendChild(child)
     el.appendChild(fragment)
 
