@@ -140,6 +140,21 @@ buster.testCase 'el',
       assert.equals(element.innerHTML, '<em>foo</em> bar')
 
 
+buster.testCase 'el.css',
+
+  'can create basic css properties': ->
+    css = el.css(color: '#00f')
+    assert.equals(css, 'color:#00f;')
+
+  'can create multiple properties': ->
+    css = el.css(color: '#00f', padding: '10px')
+    assert.equals(css, 'color:#00f;padding:10px;')
+
+  'can receive selectors': ->
+    css = el.css(body: padding: '10px')
+    assert.equals(css, 'body{padding:10px;}')
+
+
 buster.testCase 'el.setAttr',
 
   'can set element id': ->

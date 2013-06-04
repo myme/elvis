@@ -108,6 +108,18 @@ exports.appendChildren = (el, children) ->
     el.appendChild(fragment)
 
 
+exports.css = (styles) ->
+  output = []
+  for own key of styles
+    value = styles[key]
+    if typeof value is 'string'
+      output.push("#{key}:#{value};")
+    else
+      css = exports.css(value)
+      output.push("#{key}{#{css}}")
+  output.join('')
+
+
 exports.getAttr = (el, attr) ->
   directAttr = directAttributes[attr]
   if directAttr
