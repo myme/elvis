@@ -71,7 +71,7 @@ textNode = (text) ->
   doc.createTextNode(text)
 
 
-@el = exports = (tagSpecOrEl, args...) ->
+@elvis = exports = (tagSpecOrEl, args...) ->
   [attributes, children] = normalizeArguments(args)
 
   if isElement(tagSpecOrEl)

@@ -1,6 +1,6 @@
 {assert, refute} = buster
 
-el = @el
+el = @elvis
 
 
 buster.testCase 'el',
