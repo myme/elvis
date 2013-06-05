@@ -100,7 +100,7 @@ plugins = []
 exports.appendChildren = (el, children) ->
   if children.length
     fragment = doc.createDocumentFragment()
-    for child in children
+    for child in children when child
       for plugin in plugins
         value = plugin(child)
         child = value if value

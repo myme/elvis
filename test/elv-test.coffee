@@ -119,6 +119,22 @@ buster.testCase 'el',
       ])
       assert.equals(element.innerHTML, '<em>foo</em> bar')
 
+    'ignores null': ->
+      element = el('div', null)
+      assert.match element,
+        tagName: 'div'
+        innerHTML: ''
+
+    'ignores null in array': ->
+      element = el('div', [
+        'foo'
+        null
+        'bar'
+      ])
+      assert.match element,
+        tagName: 'div'
+        innerHTML: 'foobar'
+
   'can modify element':
 
     'setting text content': ->
