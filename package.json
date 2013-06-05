@@ -1,5 +1,5 @@
 {
-  "name": "elv.js",
+  "name": "elvis",
   "version": "0.0.0",
   "description": "Generate DOM without templates",
   "scripts": {

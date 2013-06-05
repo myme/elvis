@@ -1,18 +1,20 @@
 module.exports = (grunt) ->
 
   grunt.initConfig
+    pkg: grunt.file.readJSON('package.json')
+
     coffee:
       dist:
         files:
-          'dist/elv.js': ['lib/**/*.coffee']
+          'dist/<%= pkg.name %>.js': ['lib/**/*.coffee']
       test:
         files:
-          'dist/elv-test.js': ['test/**/*.coffee']
+          'dist/<%= pkg.name %>-test.js': ['test/**/*.coffee']
 
     uglify:
       dist:
         files:
-          'dist/elv.min.js': 'dist/elv.js'
+          'dist/<%= pkg.name %>.min.js': 'dist/<%= pkg.name %>.js'
 
     watch:
       test:
