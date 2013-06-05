@@ -4,6 +4,9 @@
   "ignore": [
     "**/.*",
     "node_modules",
-    "components"
+    "buster.js",
+    "/test",
+    "components",
+    "package.json"
   ]
 }
