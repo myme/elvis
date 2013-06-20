@@ -90,6 +90,19 @@ buster.testCase 'el',
         tagName: 'a'
         href: '/baz/quux'
 
+    'tag with attributes and inner text': ->
+      assert.match el('a', { href: '/foo/bar' }, 'foo'),
+        tagName: 'a'
+        href: '/foo/bar'
+        innerHTML: 'foo'
+
+    'tag with attributes and single child element': ->
+      child = el('span', 'foo')
+      assert.match el('a', { href: '/foo/bar' }, child),
+        tagName: 'a'
+        href: '/foo/bar'
+        innerHTML: '<span>foo</span>'
+
     'tag with attributes and children': ->
       assert.match el('a', { href: '/foo/bar' }, [ 'foo', ' ', 'bar' ]),
         tagName: 'a'

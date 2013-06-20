@@ -24,6 +24,8 @@ normalizeArguments = (args) ->
   if length is 2
     attributes = args[0]
     children = args[1]
+    if children not instanceof Array
+      children = [ children ]
   else if length is 1
     if typeof args[0] is 'string' or isElement(args[0])
       children = [ args[0] ]
@@ -32,7 +34,7 @@ normalizeArguments = (args) ->
     else if typeof args[0] is 'object'
       attributes = args[0]
 
-  [attributes, children]
+  [ attributes, children ]
 
 
 parseAttrString = (attrStr) ->
