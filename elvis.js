@@ -37,6 +37,9 @@
     if (length === 2) {
       attributes = args[0];
       children = args[1];
+      if (!(children instanceof Array)) {
+        children = [children];
+      }
     } else if (length === 1) {
       if (typeof args[0] === 'string' || isElement(args[0])) {
         children = [args[0]];
