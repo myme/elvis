@@ -11,6 +11,9 @@ module.exports = (grunt) ->
         files:
           'dist/<%= pkg.name %>-test.js': ['test/**/*.coffee']
 
+    buster:
+      test: {}
+
     uglify:
       dist:
         files:
