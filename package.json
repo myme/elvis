@@ -6,7 +6,10 @@
     "start": "grunt watch",
     "test": "grunt test"
   },
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/myme/elvis.git"
+  },
   "keywords": [
     "dom"
   ],
