@@ -1,8 +1,7 @@
-Elv.js
-======
+# Elv.js [![Build Status](https://travis-ci.org/myme/elvis.png?branch=master)](https://travis-ci.org/myme/elvis)
 
-Release notes
--------------
+
+## Release notes
 
 ### v0.1.1
 
