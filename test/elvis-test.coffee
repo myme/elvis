@@ -61,7 +61,10 @@ buster.testCase 'el',
         type: 'password'
 
     'anchor with id, classes, attribute value and inner text': ->
-      assert.match el('input#verify-password.class1.class2(name="verify",type="password")', 'baz'),
+      tagSpec = '''
+        input#verify-password.class1.class2(name="verify",type="password")
+      '''
+      assert.match el(tagSpec, 'baz'),
         tagName: 'input'
         id: 'verify-password'
         className: 'class1 class2'
@@ -230,7 +233,9 @@ buster.testCase 'el.getAttr',
     assert.equals(el.getAttr(el('#some-id'), 'id'), 'some-id')
 
   'can get element className': ->
-    assert.equals(el.getAttr(el('.class1.class2'), 'className'), 'class1 class2')
+    assert.equals(
+      el.getAttr(
+        el('.class1.class2'), 'className'), 'class1 class2')
 
   'can get element innerHTML with html': ->
     element = el()
