@@ -1,276 +1,255 @@
-{assert, refute} = buster
-
 el = @elvis
 
+describe 'el', ->
+  it 'can create div by default', ->
+    expect(el().tagName).to.be.equal('DIV')
 
-buster.testCase 'el',
+  it 'can create an input field', ->
+    expect(el('input').tagName).to.be.equal('INPUT')
 
-  'can create':
+  it 'can create a span', ->
+    expect(el('span').tagName).to.be.equal('SPAN')
 
-    'div by default': ->
-      assert.match(el().tagName, 'div')
+  it 'does not add id attribute by default', ->
+    expect(el().hasAttribute('id')).to.be.false
 
-    'an input field': ->
-      assert.match(el('input').tagName, 'input')
+  it 'does not add className attribute by default', ->
+    expect(el().hasAttribute('className')).to.be.false
 
-    'a span': ->
-      assert.match(el('span').tagName, 'span')
+  it 'can create div with class', ->
+    element = el('.class')
+    expect(element.tagName).to.be.equal('DIV')
+    expect(element.className).to.be.equal('class')
 
-    'does not add id attribute by default': ->
-      refute(el().hasAttribute('id'))
+  it 'can create div with multiple classes', ->
+    element = el('.class1.class2')
+    expect(element.tagName).to.be.equal('DIV')
+    expect(element.className).to.be.equal('class1 class2')
 
-    'does not add className attribute by default': ->
-      refute(el().hasAttribute('className'))
+  it 'can create div with id', ->
+    element = el('#some-element')
+    expect(element.tagName).to.be.equal('DIV')
+    expect(element.id).to.be.equal('some-element')
 
-    'div with class': ->
-      assert.match el('.class'),
-        tagName: 'div'
-        className: 'class'
+  it 'can create div with id and classes', ->
+    element = el('.class1#some-element.class2')
+    expect(element.tagName).to.be.equal('DIV')
+    expect(element.id).to.be.equal('some-element')
+    expect(element.className).to.be.equal('class1 class2')
 
-    'div with multiple classes': ->
-      assert.match el('.class1.class2'),
-        tagName: 'div'
-        className: 'class1 class2'
+  it 'can create span with class', ->
+    element = el('span.class')
+    expect(element.tagName).to.be.equal('SPAN')
+    expect(element.className).to.be.equal('class')
 
-    'div with id': ->
-      assert.match el('#some-element'),
-        tagName: 'div'
-        id: 'some-element'
+  it 'can create anchor with href', ->
+    element = el('a(href="/foo/bar")', 'baz')
+    expect(element.tagName).to.be.equal('A')
+    expect(element.href).to.match(new RegExp('/foo/bar'))
+    expect(element.innerHTML).to.be.equal('baz')
 
-    'div with id and classes': ->
-      assert.match el('.class1#some-element.class2'),
-        tagName: 'div'
-        id: 'some-element'
-        className: 'class1 class2'
+  it 'can create input with name and type', ->
+    element = el('input(name="verify",type="password")')
+    expect(element.tagName).to.be.equal('INPUT')
+    expect(element.name).to.be.equal('verify')
+    expect(element.type).to.be.equal('password')
 
-    'span with class': ->
-      assert.match el('span.class'),
-        tagName: 'span'
-        className: 'class'
+  it 'can create anchor with id, classes, attribute value and inner text', ->
+    tagSpec = '''
+      input#verify-password.class1.class2(name="verify",type="password")
+    '''
+    element = el(tagSpec, 'baz')
+    expect(element.tagName).to.be.equal('INPUT')
+    expect(element.id).to.be.equal('verify-password')
+    expect(element.className).to.be.equal('class1 class2')
+    expect(element.name).to.be.equal('verify')
+    expect(element.type).to.be.equal('password')
 
-    'anchor with href': ->
-      assert.match el('a(href="/foo/bar")', 'baz'),
-        tagName: 'a'
-        href: '/foo/bar'
-        innerHTML: 'baz'
+  it 'can set tag with attributes', ->
+    element = el('a', href: '/foo/bar')
+    expect(element.tagName).to.be.equal('A')
+    expect(element.href).to.match(new RegExp('/foo/bar'))
 
-    'input with name and type': ->
-      assert.match el('input(name="verify",type="password")'),
-        tagName: 'input'
-        name: 'verify'
-        type: 'password'
+  it 'can set tag with id set through attributes', ->
+    element = el('div#foo', id: 'bar')
+    expect(element.tagName).to.be.equal('DIV')
+    expect(element.id).to.be.equal('bar')
 
-    'anchor with id, classes, attribute value and inner text': ->
-      tagSpec = '''
-        input#verify-password.class1.class2(name="verify",type="password")
-      '''
-      assert.match el(tagSpec, 'baz'),
-        tagName: 'input'
-        id: 'verify-password'
-        className: 'class1 class2'
-        name: 'verify'
-        type: 'password'
+  it 'can set tag with className set through attributes', ->
+    element = el('div.foo', className: 'bar')
+    expect(element.tagName).to.be.equal('DIV')
+    expect(element.className).to.be.equal('bar')
 
-  'can set':
+  it 'can set tag with tag attributes overridden', ->
+    element = el('a(href="/foo/bar")', href: '/baz/quux')
+    expect(element.tagName).to.be.equal('A')
+    expect(element.href).to.match(new RegExp('/baz/quux'))
 
-    'tag with attributes': ->
-      assert.match el('a', href: '/foo/bar'),
-        tagName: 'a'
-        href: '/foo/bar'
+  it 'can set tag with attributes and inner text', ->
+    element = el('a', { href: '/foo/bar' }, 'foo')
+    expect(element.tagName).to.be.equal('A')
+    expect(element.href).to.match(new RegExp('/foo/bar'))
+    expect(element.innerHTML).to.be.equal('foo')
 
-    'tag with id set through attributes': ->
-      assert.match el('div#foo', id: 'bar'),
-        tagName: 'div'
-        id: 'bar'
+  it 'can set tag with attributes and single child element', ->
+    child = el('span', 'foo')
+    element = el('a', { href: '/foo/bar' }, child)
+    expect(element.tagName).to.be.equal('A')
+    expect(element.href).to.match(new RegExp('/foo/bar'))
+    expect(element.innerHTML).to.be.equal('<span>foo</span>')
 
-    'tag with className set through attributes': ->
-      assert.match el('div.foo', className: 'bar'),
-        tagName: 'div'
-        className: 'bar'
+  it 'can set tag with attributes and children', ->
+    element = el('a', { href: '/foo/bar' }, [ 'foo', ' ', 'bar' ])
+    expect(element.tagName).to.be.equal('A')
+    expect(element.href).to.match(new RegExp('/foo/bar'))
+    expect(element.innerHTML).to.be.equal('foo bar')
 
-    'tag with tag attributes overridden': ->
-      assert.match el('a(href="/foo/bar")', href: '/baz/quux'),
-        tagName: 'a'
-        href: '/baz/quux'
+  it 'can append element text as second argument', ->
+    element = el('div', 'foo bar')
+    expect(element.tagName).to.be.equal('DIV')
+    expect(element.innerHTML).to.be.equal('foo bar')
 
-    'tag with attributes and inner text': ->
-      assert.match el('a', { href: '/foo/bar' }, 'foo'),
-        tagName: 'a'
-        href: '/foo/bar'
-        innerHTML: 'foo'
+  it 'can append element text as array of text', ->
+    element = el('div', [ 'foo', ' ', 'bar' ])
+    expect(element.tagName).to.be.equal('DIV')
+    expect(element.innerHTML).to.be.equal('foo bar')
 
-    'tag with attributes and single child element': ->
-      child = el('span', 'foo')
-      assert.match el('a', { href: '/foo/bar' }, child),
-        tagName: 'a'
-        href: '/foo/bar'
-        innerHTML: '<span>foo</span>'
+  it 'can append element child', ->
+    element = el('div', el('em', 'foo'))
+    expect(element.innerHTML).to.be.equal('<em>foo</em>')
 
-    'tag with attributes and children': ->
-      assert.match el('a', { href: '/foo/bar' }, [ 'foo', ' ', 'bar' ]),
-        tagName: 'a'
-        href: '/foo/bar'
-        innerHTML: 'foo bar'
+  it 'can append array of children', ->
+    element = el('div', [
+      el('em', 'foo')
+      ' bar'
+    ])
+    expect(element.innerHTML).to.be.equal('<em>foo</em> bar')
 
-  'can append':
+  it 'ignores null', ->
+    element = el('div', null)
+    expect(element.tagName).to.be.equal('DIV')
+    expect(element.innerHTML).to.be.equal('')
 
-    'element text as second argument': ->
-      element = el('div', 'foo bar')
-      assert.tagName(element, 'div')
-      assert.equals(element.innerHTML, 'foo bar')
+  it 'ignores null in array', ->
+    element = el('div', [
+      'foo'
+      null
+      'bar'
+    ])
+    expect(element.tagName).to.be.equal('DIV')
+    expect(element.innerHTML).to.be.equal('foobar')
 
-    'element text as array of text': ->
-      element = el('div', [ 'foo', ' ', 'bar' ])
-      assert.tagName(element, 'div')
-      assert.equals(element.innerHTML, 'foo bar')
+  it 'can modify element setting text content', ->
+    element = el('div', 'foo')
+    el(element, 'bar')
+    expect(element.innerHTML).to.be.equal('bar')
 
-    'element child': ->
-      element = el('div', el('em', 'foo'))
-      assert.equals(element.innerHTML, '<em>foo</em>')
+  it 'can modify setting HTML content', ->
+    element = el('div', 'foo')
+    el(element, el('em', 'foo'))
+    expect(element.innerHTML).to.be.equal('<em>foo</em>')
 
-    'array of children': ->
-      element = el('div', [
-        el('em', 'foo')
-        ' bar'
-      ])
-      assert.equals(element.innerHTML, '<em>foo</em> bar')
-
-    'ignores null': ->
-      element = el('div', null)
-      assert.match element,
-        tagName: 'div'
-        innerHTML: ''
-
-    'ignores null in array': ->
-      element = el('div', [
-        'foo'
-        null
-        'bar'
-      ])
-      assert.match element,
-        tagName: 'div'
-        innerHTML: 'foobar'
-
-  'can modify element':
-
-    'setting text content': ->
-      element = el('div', 'foo')
-      el(element, 'bar')
-      assert.equals(element.innerHTML, 'bar')
-
-    'setting HTML content': ->
-      element = el('div', 'foo')
-      el(element, el('em', 'foo'))
-      assert.equals(element.innerHTML, '<em>foo</em>')
-
-    'setting array of HTML content': ->
-      element = el('div', 'foo')
-      el(element, [
-        el('em', 'foo')
-        ' bar'
-      ])
-      assert.equals(element.innerHTML, '<em>foo</em> bar')
+  it 'can modify setting array of HTML content', ->
+    element = el('div', 'foo')
+    el(element, [
+      el('em', 'foo')
+      ' bar'
+    ])
+    expect(element.innerHTML).to.be.equal('<em>foo</em> bar')
 
 
-buster.testCase 'el.css',
-
-  'can create basic css properties': ->
+describe 'el.css', ->
+  it 'can create basic css properties', ->
     css = el.css(color: '#00f')
-    assert.equals(css, 'color:#00f;')
+    expect(css).to.be.equal('color:#00f;')
 
-  'can create multiple properties': ->
+  it 'can create multiple properties', ->
     css = el.css(color: '#00f', padding: '10px')
-    assert.equals(css, 'color:#00f;padding:10px;')
+    expect(css).to.be.equal('color:#00f;padding:10px;')
 
-  'can receive selectors': ->
+  it 'can receive selectors', ->
     css = el.css(body: padding: '10px')
-    assert.equals(css, 'body{padding:10px;}')
+    expect(css).to.be.equal('body{padding:10px;}')
 
 
-buster.testCase 'el.setAttr',
-
-  'can set element id': ->
+describe 'el.setAttr', ->
+  it 'can set element id', ->
     element = el()
     el.setAttr(element, 'id', 'some-id')
-    assert.equals(element.id, 'some-id')
+    expect(element.id).to.be.equal('some-id')
 
-  'can set element className': ->
+  it 'can set element className', ->
     element = el()
     el.setAttr(element, 'className', 'class1 class2')
-    assert.equals(element.className, 'class1 class2')
+    expect(element.className).to.be.equal('class1 class2')
 
-  'can set element innerHTML with html': ->
+  it 'can set element innerHTML with html', ->
     element = el()
     el.setAttr(element, 'html', '<em>foo</em> bar')
-    assert.equals(element.innerHTML, '<em>foo</em> bar')
+    expect(element.innerHTML).to.be.equal('<em>foo</em> bar')
 
-  'can set / get element text content': ->
+  it 'can set / get element text content', ->
     element = el()
     el.setAttr(element, 'text', '<em>foo</em> bar')
-    assert.equals(element.innerHTML, '&lt;em&gt;foo&lt;/em&gt; bar')
+    expect(element.innerHTML).to.be.equal('&lt;em&gt;foo&lt;/em&gt; bar')
 
-  'can set HTML content from DOM element': ->
+  it 'can set HTML content from DOM element', ->
     element = el()
     el.setAttr(element, 'html', el('em', 'foo'))
-    assert.equals(element.innerHTML, '<em>foo</em>')
+    expect(element.innerHTML).to.be.equal('<em>foo</em>')
 
-  'can set multiple attributes': ->
+  it 'can set multiple attributes', ->
     element = el()
     el.setAttr(element, id: 'some-id', className: 'class')
-    assert.match element,
-      id: 'some-id'
-      className: 'class'
+    expect(element.id).to.be.equal('some-id')
+    expect(element.className).to.be.equal('class')
 
-  'can set href on anchor': ->
+  it 'can set href on anchor', ->
     element = el('a')
     el.setAttr(element, href: '/foo/bar')
-    assert.match(element, href: '/foo/bar')
+    expect(element.href).to.match(new RegExp('/foo/bar'))
 
 
-buster.testCase 'el.getAttr',
+describe 'el.getAttr', ->
+  it 'can get element id', ->
+    expect(el.getAttr(el('#some-id'), 'id')).to.be.equal('some-id')
 
-  'can get element id': ->
-    assert.equals(el.getAttr(el('#some-id'), 'id'), 'some-id')
+  it 'can get element className', ->
+    expect(el.getAttr(el('.class1.class2'), 'className'))
+      .to.be.equal('class1 class2')
 
-  'can get element className': ->
-    assert.equals(
-      el.getAttr(
-        el('.class1.class2'), 'className'), 'class1 class2')
-
-  'can get element innerHTML with html': ->
+  it 'can get element innerHTML with html', ->
     element = el()
     el.setAttr(element, 'html', '<em>foo</em> bar')
-    assert.equals(el.getAttr(element, 'html'), '<em>foo</em> bar')
+    expect(el.getAttr(element, 'html')).to.be.equal('<em>foo</em> bar')
 
-  'can get element text content with text': ->
+  it 'can get element text content with text', ->
     element = el()
     el.setAttr(element, 'html', '<em>foo</em> bar')
-    assert.equals(el.getAttr(element, 'text'), 'foo bar')
+    expect(el.getAttr(element, 'text')).to.be.equal('foo bar')
 
 
-buster.testCase 'el.registerPlugin',
-
-  'can register plugin called on appended elements': ->
-    el.registerPlugin(spy = @spy())
+describe 'el.registerPlugin', ->
+  it 'can register plugin called on appended elements', ->
+    el.registerPlugin(spy = sinon.spy())
     el('div', [ 'foo', 'bar' ])
-    assert.calledTwice(spy)
-    assert.calledWith(spy, 'foo')
-    assert.calledWith(spy, 'bar')
+    expect(spy).to.be.calledTwice
+    expect(spy).to.be.calledWith('foo')
+    expect(spy).to.be.calledWith('bar')
 
-  'can register plugin replacing elements': ->
+  it 'can register plugin replacing elements', ->
     children = [
       el('span', 'baz')
       el('span', 'quux')
     ]
     el.registerPlugin((child) -> children.shift())
-    assert.match el('div', [ 'foo', 'bar' ]),
-      innerHTML: '<span>baz</span><span>quux</span>'
+    expect(el('div', [ 'foo', 'bar' ]).innerHTML)
+      .to.be.equal('<span>baz</span><span>quux</span>')
 
 
-buster.testCase 'el.resetPlugins',
-
-  'removes registered plugins': ->
-    el.registerPlugin(spy = @spy())
+describe 'el.resetPlugins', ->
+  it 'removes registered plugins', ->
+    el.registerPlugin(spy = sinon.spy())
     el.resetPlugins()
     el('div', [ 'foo', 'bar' ])
-    refute.called(spy)
+    expect(spy).not.to.be.called

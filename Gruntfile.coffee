@@ -11,8 +11,22 @@ module.exports = (grunt) ->
         files:
           'dist/<%= pkg.name %>-test.js': ['test/**/*.coffee']
 
-    buster:
-      test: {}
+    coffeelint:
+      all: [
+        'lib/**/*.coffee'
+        'test/**/*.coffee'
+      ]
+
+    karma:
+      test:
+        options:
+          browsers: ['PhantomJS']
+          files: [
+            'lib/**/*.coffee'
+            'test/**/*.coffee'
+          ]
+          frameworks: ['mocha', 'chai', 'sinon-chai']
+          singleRun: true
 
     uglify:
       dist:
@@ -25,13 +39,15 @@ module.exports = (grunt) ->
           'lib/**/*.coffee'
           'test/**/*.coffee'
         ]
-        tasks: ['default']
+        tasks: ['test']
 
-  grunt.loadNpmTasks('grunt-buster')
+  grunt.loadNpmTasks('grunt-coffeelint')
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-watch')
+  grunt.loadNpmTasks('grunt-karma')
 
-  grunt.registerTask('test', ['coffee', 'buster'])
+  grunt.registerTask('lint', ['coffeelint'])
+  grunt.registerTask('test', ['lint', 'karma'])
   grunt.registerTask('build', ['test', 'uglify'])
   grunt.registerTask('default', ['build'])
