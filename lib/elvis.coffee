@@ -97,6 +97,8 @@ parseTagSpec = (tagSpec) ->
 class exports.Element
   constructor: (@value) ->
   getElement: -> textNode(@value)
+  setAttr: (obj, attr) ->
+    exports.setAttr(obj, attr, @value)
 
 
 exports.text = textNode = (text) ->
@@ -149,16 +151,18 @@ exports.setAttr = (el, args...) ->
       exports.setAttr(el, attr, value)
   else
     [attr, value] = args
-    directAttr = directAttributes[attr]
-
-    if not directAttr
-      el.setAttribute(attr, value)
+    if value instanceof exports.Element
+      value.setAttr(el, attr)
     else
-      if attr is 'html' and typeof value isnt 'string'
-        el.innerHTML = ''
-        if isElement(value)
-          el.appendChild(value)
-        else if value instanceof Array
-          exports.appendChildren(el, value)
+      directAttr = directAttributes[attr]
+      if not directAttr
+        el.setAttribute(attr, value)
       else
-        el[directAttr] = value
+        if attr is 'html' and typeof value isnt 'string'
+          el.innerHTML = ''
+          if isElement(value)
+            el.appendChild(value)
+          else if value instanceof Array
+            exports.appendChildren(el, value)
+        else
+          el[directAttr] = value

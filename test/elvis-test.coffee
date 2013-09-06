@@ -229,6 +229,16 @@ describe 'el.setAttr', ->
     el.setAttr(element, href: '/foo/bar')
     expect(element.href).to.match(new RegExp('/foo/bar'))
 
+  it 'can set className value from Element', ->
+    element = el('span')
+    el.setAttr(element, className: new el.Element('foo'))
+    expect(element.className).to.equal('foo')
+
+  it 'can set href value from Element', ->
+    element = el('a')
+    el.setAttr(element, href: new el.Element('/foo/bar'))
+    expect(element.href).to.match(new RegExp('/foo/bar'))
+
 
 describe 'el.getAttr', ->
   it 'can get element id', ->
