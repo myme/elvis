@@ -1,14 +1,69 @@
 el = @elvis
 
 describe 'el', ->
-  it 'can create div by default', ->
-    expect(el().tagName).to.equal('DIV')
+  describe 'can create', ->
+    it 'div by default', ->
+      expect(el().tagName).to.equal('DIV')
 
-  it 'can create an input field', ->
-    expect(el('input').tagName).to.equal('INPUT')
+    it 'an input field', ->
+      expect(el('input').tagName).to.equal('INPUT')
 
-  it 'can create a span', ->
-    expect(el('span').tagName).to.equal('SPAN')
+    it 'a span', ->
+      expect(el('span').tagName).to.equal('SPAN')
+
+    it 'div with class', ->
+      element = el('.class')
+      expect(element.tagName).to.equal('DIV')
+      expect(element.className).to.equal('class')
+
+    it 'div with multiple classes', ->
+      element = el('.class1.class2')
+      expect(element.tagName).to.equal('DIV')
+      expect(element.className).to.equal('class1 class2')
+
+    it 'div with id', ->
+      element = el('#some-element')
+      expect(element.tagName).to.equal('DIV')
+      expect(element.id).to.equal('some-element')
+
+    it 'div with id and classes', ->
+      element = el('.class1#some-element.class2')
+      expect(element.tagName).to.equal('DIV')
+      expect(element.id).to.equal('some-element')
+      expect(element.className).to.equal('class1 class2')
+
+    it 'span with class', ->
+      element = el('span.class')
+      expect(element.tagName).to.equal('SPAN')
+      expect(element.className).to.equal('class')
+
+    it 'anchor with href', ->
+      element = el('a(href="/foo/bar")', 'baz')
+      expect(element.tagName).to.equal('A')
+      expect(element.href).to.match(new RegExp('/foo/bar'))
+      expect(element.innerHTML).to.equal('baz')
+
+    it 'input with name and type', ->
+      element = el('input(name="verify",type="password")')
+      expect(element.tagName).to.equal('INPUT')
+      expect(element.name).to.equal('verify')
+      expect(element.type).to.equal('password')
+
+    it 'anchor with id, classes, attribute value and inner text', ->
+      tagSpec = '''
+        input#verify-password.class1.class2(name="verify",type="password")
+      '''
+      element = el(tagSpec, 'baz')
+      expect(element.tagName).to.equal('INPUT')
+      expect(element.id).to.equal('verify-password')
+      expect(element.className).to.equal('class1 class2')
+      expect(element.name).to.equal('verify')
+      expect(element.type).to.equal('password')
+
+  it 'can set tag with attributes', ->
+    element = el('a', href: '/foo/bar')
+    expect(element.tagName).to.equal('A')
+    expect(element.href).to.match(new RegExp('/foo/bar'))
 
   it 'does not add id attribute by default', ->
     expect(el().hasAttribute('id')).to.be.false
@@ -16,114 +71,62 @@ describe 'el', ->
   it 'does not add className attribute by default', ->
     expect(el().hasAttribute('className')).to.be.false
 
-  it 'can create div with class', ->
-    element = el('.class')
-    expect(element.tagName).to.equal('DIV')
-    expect(element.className).to.equal('class')
+  describe 'can set', ->
+    it 'tag with id set through attributes', ->
+      element = el('div#foo', id: 'bar')
+      expect(element.tagName).to.equal('DIV')
+      expect(element.id).to.equal('bar')
 
-  it 'can create div with multiple classes', ->
-    element = el('.class1.class2')
-    expect(element.tagName).to.equal('DIV')
-    expect(element.className).to.equal('class1 class2')
+    it 'tag with className set through attributes', ->
+      element = el('div.foo', className: 'bar')
+      expect(element.tagName).to.equal('DIV')
+      expect(element.className).to.equal('bar')
 
-  it 'can create div with id', ->
-    element = el('#some-element')
-    expect(element.tagName).to.equal('DIV')
-    expect(element.id).to.equal('some-element')
+    it 'tag with tag attributes overridden', ->
+      element = el('a(href="/foo/bar")', href: '/baz/quux')
+      expect(element.tagName).to.equal('A')
+      expect(element.href).to.match(new RegExp('/baz/quux'))
 
-  it 'can create div with id and classes', ->
-    element = el('.class1#some-element.class2')
-    expect(element.tagName).to.equal('DIV')
-    expect(element.id).to.equal('some-element')
-    expect(element.className).to.equal('class1 class2')
+    it 'tag with attributes and inner text', ->
+      element = el('a', { href: '/foo/bar' }, 'foo')
+      expect(element.tagName).to.equal('A')
+      expect(element.href).to.match(new RegExp('/foo/bar'))
+      expect(element.innerHTML).to.equal('foo')
 
-  it 'can create span with class', ->
-    element = el('span.class')
-    expect(element.tagName).to.equal('SPAN')
-    expect(element.className).to.equal('class')
+    it 'tag with attributes and single child element', ->
+      child = el('span', 'foo')
+      element = el('a', { href: '/foo/bar' }, child)
+      expect(element.tagName).to.equal('A')
+      expect(element.href).to.match(new RegExp('/foo/bar'))
+      expect(element.innerHTML).to.equal('<span>foo</span>')
 
-  it 'can create anchor with href', ->
-    element = el('a(href="/foo/bar")', 'baz')
-    expect(element.tagName).to.equal('A')
-    expect(element.href).to.match(new RegExp('/foo/bar'))
-    expect(element.innerHTML).to.equal('baz')
+    it 'tag with attributes and children', ->
+      element = el('a', { href: '/foo/bar' }, [ 'foo', ' ', 'bar' ])
+      expect(element.tagName).to.equal('A')
+      expect(element.href).to.match(new RegExp('/foo/bar'))
+      expect(element.innerHTML).to.equal('foo bar')
 
-  it 'can create input with name and type', ->
-    element = el('input(name="verify",type="password")')
-    expect(element.tagName).to.equal('INPUT')
-    expect(element.name).to.equal('verify')
-    expect(element.type).to.equal('password')
+  describe 'can append', ->
+    it 'element text as second argument', ->
+      element = el('div', 'foo bar')
+      expect(element.tagName).to.equal('DIV')
+      expect(element.innerHTML).to.equal('foo bar')
 
-  it 'can create anchor with id, classes, attribute value and inner text', ->
-    tagSpec = '''
-      input#verify-password.class1.class2(name="verify",type="password")
-    '''
-    element = el(tagSpec, 'baz')
-    expect(element.tagName).to.equal('INPUT')
-    expect(element.id).to.equal('verify-password')
-    expect(element.className).to.equal('class1 class2')
-    expect(element.name).to.equal('verify')
-    expect(element.type).to.equal('password')
+    it 'element text as array of text', ->
+      element = el('div', [ 'foo', ' ', 'bar' ])
+      expect(element.tagName).to.equal('DIV')
+      expect(element.innerHTML).to.equal('foo bar')
 
-  it 'can set tag with attributes', ->
-    element = el('a', href: '/foo/bar')
-    expect(element.tagName).to.equal('A')
-    expect(element.href).to.match(new RegExp('/foo/bar'))
+    it 'element child', ->
+      element = el('div', el('em', 'foo'))
+      expect(element.innerHTML).to.equal('<em>foo</em>')
 
-  it 'can set tag with id set through attributes', ->
-    element = el('div#foo', id: 'bar')
-    expect(element.tagName).to.equal('DIV')
-    expect(element.id).to.equal('bar')
-
-  it 'can set tag with className set through attributes', ->
-    element = el('div.foo', className: 'bar')
-    expect(element.tagName).to.equal('DIV')
-    expect(element.className).to.equal('bar')
-
-  it 'can set tag with tag attributes overridden', ->
-    element = el('a(href="/foo/bar")', href: '/baz/quux')
-    expect(element.tagName).to.equal('A')
-    expect(element.href).to.match(new RegExp('/baz/quux'))
-
-  it 'can set tag with attributes and inner text', ->
-    element = el('a', { href: '/foo/bar' }, 'foo')
-    expect(element.tagName).to.equal('A')
-    expect(element.href).to.match(new RegExp('/foo/bar'))
-    expect(element.innerHTML).to.equal('foo')
-
-  it 'can set tag with attributes and single child element', ->
-    child = el('span', 'foo')
-    element = el('a', { href: '/foo/bar' }, child)
-    expect(element.tagName).to.equal('A')
-    expect(element.href).to.match(new RegExp('/foo/bar'))
-    expect(element.innerHTML).to.equal('<span>foo</span>')
-
-  it 'can set tag with attributes and children', ->
-    element = el('a', { href: '/foo/bar' }, [ 'foo', ' ', 'bar' ])
-    expect(element.tagName).to.equal('A')
-    expect(element.href).to.match(new RegExp('/foo/bar'))
-    expect(element.innerHTML).to.equal('foo bar')
-
-  it 'can append element text as second argument', ->
-    element = el('div', 'foo bar')
-    expect(element.tagName).to.equal('DIV')
-    expect(element.innerHTML).to.equal('foo bar')
-
-  it 'can append element text as array of text', ->
-    element = el('div', [ 'foo', ' ', 'bar' ])
-    expect(element.tagName).to.equal('DIV')
-    expect(element.innerHTML).to.equal('foo bar')
-
-  it 'can append element child', ->
-    element = el('div', el('em', 'foo'))
-    expect(element.innerHTML).to.equal('<em>foo</em>')
-
-  it 'can append array of children', ->
-    element = el('div', [
-      el('em', 'foo')
-      ' bar'
-    ])
-    expect(element.innerHTML).to.equal('<em>foo</em> bar')
+    it 'array of children', ->
+      element = el('div', [
+        el('em', 'foo')
+        ' bar'
+      ])
+      expect(element.innerHTML).to.equal('<em>foo</em> bar')
 
   it 'ignores null', ->
     element = el('div', null)
@@ -156,6 +159,19 @@ describe 'el', ->
       ' bar'
     ])
     expect(element.innerHTML).to.equal('<em>foo</em> bar')
+
+  describe 'append children', ->
+    it 'can append strings', ->
+      element = el('div', 'foo')
+      expect(element.innerHTML).to.be.equal('foo')
+
+    it 'can append DOM elements', ->
+      element = el('div', el('span', 'foo'))
+      expect(element.innerHTML).to.be.equal('<span>foo</span>')
+
+    it 'can append text nodes', ->
+      element = el('div', el.text('foo'))
+      expect(element.innerHTML).to.be.equal('foo')
 
 
 describe 'el.css', ->
