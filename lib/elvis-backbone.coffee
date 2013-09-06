@@ -4,12 +4,17 @@ class Binding
   constructor: (@model, @attr, @transform) ->
 
   bindTo: (obj, attr) ->
-    @model.on "change:#{@attr}", =>
-      el.setAttr(obj, attr, @getValue())
+    @toObj = obj
+    @toAttr = attr
+    @model.on("change:#{@attr}", @update, this)
+    this
 
   getValue: ->
     value = @model.get(@attr)
     if @transform then @transform(value) else value
+
+  update: ->
+    el.setAttr(@toObj, @toAttr, @getValue())
 
 
 el.bind = (model, attr, transform) ->
@@ -18,8 +23,7 @@ el.bind = (model, attr, transform) ->
 
 el.registerPlugin (element) ->
   if element instanceof Binding
-    binding = element
-    node = el.text(binding.getValue())
-    binding.bindTo(node, 'text')
+    node = el.text()
+    element.bindTo(node, 'text').update()
     return node
   element
