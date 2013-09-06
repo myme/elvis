@@ -16,6 +16,15 @@ merge = (left, right) ->
   dest
 
 
+canAppend = (el) ->
+  (
+    typeof el is 'string' or
+    isElement(el) or
+    isText(el) or
+    el instanceof exports.Element
+  )
+
+
 normalizeArguments = (args) ->
   attributes = {}
   children = []
@@ -27,7 +36,7 @@ normalizeArguments = (args) ->
     if children not instanceof Array
       children = [ children ]
   else if length is 1
-    if typeof args[0] is 'string' or isElement(args[0]) or isText(args[0])
+    if canAppend(args[0])
       children = [ args[0] ]
     else if args[0] instanceof Array
       children = args[0]
@@ -85,6 +94,13 @@ parseTagSpec = (tagSpec) ->
   el
 
 
+class exports.Element
+  constructor: (@value) ->
+  getElement: -> textNode(@value)
+  setAttr: (obj, attr) ->
+    exports.setAttr(obj, attr, @value)
+
+
 exports.text = textNode = (text) ->
   doc.createTextNode(text)
 
@@ -96,16 +112,14 @@ directAttributes =
   'text': 'textContent'
 
 
-plugins = []
-
-
 exports.appendChildren = (el, children) ->
   if children.length
     fragment = doc.createDocumentFragment()
     for child in children when child
-      for plugin in plugins
-        value = plugin(child)
-        child = value if value
+      if typeof child is 'string'
+        child = new exports.Element(child)
+      if child instanceof exports.Element
+        child = child.getElement()
       fragment.appendChild(child)
     el.appendChild(fragment)
 
@@ -134,27 +148,18 @@ exports.setAttr = (el, args...) ->
       exports.setAttr(el, attr, value)
   else
     [attr, value] = args
-    directAttr = directAttributes[attr]
-
-    if not directAttr
-      el.setAttribute(attr, value)
+    if value instanceof exports.Element
+      value.setAttr(el, attr)
     else
-      if attr is 'html' and typeof value isnt 'string'
-        el.innerHTML = ''
-        if isElement(value)
-          el.appendChild(value)
-        else if value instanceof Array
-          exports.appendChildren(el, value)
+      directAttr = directAttributes[attr]
+      if not directAttr
+        el.setAttribute(attr, value)
       else
-        el[directAttr] = value
-
-
-exports.registerPlugin = (plugin) ->
-  plugins.unshift(plugin)
-
-
-do exports.resetPlugins = ->
-  plugins = []
-  exports.registerPlugin (child) ->
-    return textNode(child) if typeof child is 'string'
-    null
+        if attr is 'html' and typeof value isnt 'string'
+          el.innerHTML = ''
+          if isElement(value)
+            el.appendChild(value)
+          else if value instanceof Array
+            exports.appendChildren(el, value)
+        else
+          el[directAttr] = value
