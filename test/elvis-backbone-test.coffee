@@ -23,3 +23,8 @@ describe 'el.backbone.model', ->
     expect(spy).to.be.calledWith('bar')
     model.set(foo: 'quux')
     expect(spy).to.be.calledWith('quux')
+
+  # it 'can bind to attributes', ->
+  #   model = new Backbone.Model(foo: 'bar')
+  #   element = el('div', className: el.bind(model, 'foo'))
+  #   expect(element.className).to.be.equal('bar')
