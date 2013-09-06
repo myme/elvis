@@ -18,7 +18,7 @@ describe 'el.backbone.model', ->
   it 'can transform binding value', ->
     model = new Backbone.Model(foo: 'bar')
     reverseString = (input) -> input.split('').reverse().join('')
-    element = el('div', [ el.bind(model, 'foo', reverseString) ])
+    element = el('div', el.bind(model, 'foo', reverseString))
     expect(element.innerHTML).to.equal('rab')
     model.set(foo: 'quux')
     expect(element.innerHTML).to.equal('xuuq')
