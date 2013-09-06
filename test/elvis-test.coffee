@@ -242,7 +242,9 @@ describe 'el.text', ->
 
 describe 'el.registerPlugin', ->
   it 'can register plugin called on appended elements', ->
-    el.registerPlugin(spy = sinon.spy())
+    el.registerPlugin
+      predicate: -> true
+      handler: spy = sinon.spy()
     el('div', [ 'foo', 'bar' ])
     expect(spy).to.be.calledTwice
     expect(spy).to.be.calledWith('foo')
@@ -253,7 +255,9 @@ describe 'el.registerPlugin', ->
       el('span', 'baz')
       el('span', 'quux')
     ]
-    el.registerPlugin((child) -> children.shift())
+    el.registerPlugin
+      predicate: -> true
+      handler: (child) -> children.shift()
     expect(el('div', [ 'foo', 'bar' ]).innerHTML)
       .to.equal('<span>baz</span><span>quux</span>')
 

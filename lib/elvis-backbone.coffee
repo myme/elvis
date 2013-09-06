@@ -21,9 +21,9 @@ el.bind = (model, attr, transform) ->
   new Binding(model, attr, transform)
 
 
-el.registerPlugin (element) ->
-  if element instanceof Binding
-    node = el.text()
-    element.bindTo(node, 'text').update()
-    return node
-  element
+el.registerPlugin
+  predicate: (element) ->
+    element instanceof Binding
+  handler: (element) ->
+    element.bindTo(node = el.text(), 'text').update()
+    node

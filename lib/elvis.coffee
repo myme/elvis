@@ -103,8 +103,8 @@ exports.appendChildren = (el, children) ->
   if children.length
     fragment = doc.createDocumentFragment()
     for child in children when child
-      for plugin in plugins
-        value = plugin(child)
+      for plugin in plugins when plugin.predicate(child)
+        value = plugin.handler(child)
         child = value if value
       fragment.appendChild(child)
     el.appendChild(fragment)
@@ -155,6 +155,8 @@ exports.registerPlugin = (plugin) ->
 
 do exports.resetPlugins = ->
   plugins = []
-  exports.registerPlugin (child) ->
-    return textNode(child) if typeof child is 'string'
-    null
+  exports.registerPlugin
+    predicate: (element) ->
+      typeof element is 'string'
+    handler: (element) ->
+      return textNode(element)
