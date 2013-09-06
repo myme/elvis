@@ -4,16 +4,16 @@ describe 'el.backbone.model', ->
   # it 'can handle basic bindings', ->
   #   model = new Backbone.Model(foo: 'bar')
   #   element = el('div', el.bind(model, 'foo'))
-  #   expect(element.innerHTML).to.be.equal('bar')
+  #   expect(element.innerHTML).to.equal('bar')
   #   model.set(foo: 'quux')
-  #   expect(element.innerHTML).to.be.equal('quux')
+  #   expect(element.innerHTML).to.equal('quux')
 
   it 'can handle binding in array', ->
     model = new Backbone.Model(foo: 'bar')
     element = el('div', [ el.bind(model, 'foo') ])
-    expect(element.innerHTML).to.be.equal('bar')
+    expect(element.innerHTML).to.equal('bar')
     model.set(foo: 'quux')
-    expect(element.innerHTML).to.be.equal('quux')
+    expect(element.innerHTML).to.equal('quux')
 
   it 'can transform binding value', ->
     model = new Backbone.Model(foo: 'bar')
@@ -27,4 +27,4 @@ describe 'el.backbone.model', ->
   # it 'can bind to attributes', ->
   #   model = new Backbone.Model(foo: 'bar')
   #   element = el('div', className: el.bind(model, 'foo'))
-  #   expect(element.className).to.be.equal('bar')
+  #   expect(element.className).to.equal('bar')

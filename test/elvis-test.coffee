@@ -163,15 +163,15 @@ describe 'el', ->
   describe 'append children', ->
     it 'can append strings', ->
       element = el('div', 'foo')
-      expect(element.innerHTML).to.be.equal('foo')
+      expect(element.innerHTML).to.equal('foo')
 
     it 'can append DOM elements', ->
       element = el('div', el('span', 'foo'))
-      expect(element.innerHTML).to.be.equal('<span>foo</span>')
+      expect(element.innerHTML).to.equal('<span>foo</span>')
 
     it 'can append text nodes', ->
       element = el('div', el.text('foo'))
-      expect(element.innerHTML).to.be.equal('foo')
+      expect(element.innerHTML).to.equal('foo')
 
 
 describe 'el.css', ->
