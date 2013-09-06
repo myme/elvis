@@ -1,18 +1,19 @@
 el = @elvis
 
 class Binding
-  constructor: (@model, @attr) ->
+  constructor: (@model, @attr, @transform) ->
 
   bindTo: (obj, attr) ->
     @model.on "change:#{@attr}", =>
       el.setAttr(obj, attr, @getValue())
 
   getValue: ->
-    @model.get(@attr)
+    value = @model.get(@attr)
+    if @transform then @transform(value) else value
 
 
-el.bind = (model, attr) ->
-  new Binding(model, attr)
+el.bind = (model, attr, transform) ->
+  new Binding(model, attr, transform)
 
 
 el.registerPlugin (element) ->
