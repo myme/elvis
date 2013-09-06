@@ -17,12 +17,11 @@ describe 'el.backbone.model', ->
 
   it 'can transform binding value', ->
     model = new Backbone.Model(foo: 'bar')
-    spy = sinon.spy()
-    element = el('div', [ el.bind(model, 'foo', spy) ])
-    expect(spy).to.be.calledOnce
-    expect(spy).to.be.calledWith('bar')
+    reverseString = (input) -> input.split('').reverse().join('')
+    element = el('div', [ el.bind(model, 'foo', reverseString) ])
+    expect(element.innerHTML).to.equal('rab')
     model.set(foo: 'quux')
-    expect(spy).to.be.calledWith('quux')
+    expect(element.innerHTML).to.equal('xuuq')
 
   it 'can bind to attributes', ->
     model = new Backbone.Model(foo: 'bar')
