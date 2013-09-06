@@ -229,6 +229,17 @@ describe 'el.getAttr', ->
     expect(el.getAttr(element, 'text')).to.be.equal('foo bar')
 
 
+describe 'el.text', ->
+  it 'can create a text node', ->
+    node = el.text('foo')
+    expect(node.nodeType).to.be.equal(document.TEXT_NODE)
+    expect(node.textContent).to.be.equal('foo')
+
+  it 'can be appended to regularly with el', ->
+    element = el('div', el.text('foo'))
+    expect(element.innerHTML).to.be.equal('foo')
+
+
 describe 'el.registerPlugin', ->
   it 'can register plugin called on appended elements', ->
     el.registerPlugin(spy = sinon.spy())

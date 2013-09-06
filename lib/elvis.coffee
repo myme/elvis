@@ -27,7 +27,7 @@ normalizeArguments = (args) ->
     if children not instanceof Array
       children = [ children ]
   else if length is 1
-    if typeof args[0] is 'string' or isElement(args[0])
+    if typeof args[0] is 'string' or isElement(args[0]) or isText(args[0])
       children = [ args[0] ]
     else if args[0] instanceof Array
       children = args[0]
@@ -69,10 +69,6 @@ parseTagSpec = (tagSpec) ->
   [tag, attributes]
 
 
-textNode = (text) ->
-  doc.createTextNode(text)
-
-
 @elvis = exports = (tagSpecOrEl, args...) ->
   [attributes, children] = normalizeArguments(args)
 
@@ -87,6 +83,10 @@ textNode = (text) ->
   exports.setAttr(el, attributes)
 
   el
+
+
+exports.text = textNode = (text) ->
+  doc.createTextNode(text)
 
 
 directAttributes =
