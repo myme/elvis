@@ -112,9 +112,6 @@ directAttributes =
   'text': 'textContent'
 
 
-plugins = []
-
-
 exports.appendChildren = (el, children) ->
   if children.length
     fragment = doc.createDocumentFragment()
