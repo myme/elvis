@@ -1,6 +1,6 @@
 el = @elvis
 
-class Binding
+class Binding extends el.Element
   constructor: (@model, @attr, @transform) ->
 
   bindTo: (obj, attr) ->
@@ -8,6 +8,12 @@ class Binding
     @toAttr = attr
     @model.on("change:#{@attr}", @update, this)
     this
+
+  getElement: ->
+    if not @_element
+      @_element = el.text(@getValue())
+      @bindTo(@_element, 'text')
+    @_element
 
   getValue: ->
     value = @model.get(@attr)
@@ -19,11 +25,3 @@ class Binding
 
 el.bind = (model, attr, transform) ->
   new Binding(model, attr, transform)
-
-
-el.registerPlugin
-  predicate: (element) ->
-    element instanceof Binding
-  handler: (element) ->
-    element.bindTo(node = el.text(), 'text').update()
-    node

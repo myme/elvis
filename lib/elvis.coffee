@@ -16,6 +16,15 @@ merge = (left, right) ->
   dest
 
 
+canAppend = (el) ->
+  (
+    typeof el is 'string' or
+    isElement(el) or
+    isText(el) or
+    el instanceof exports.Element
+  )
+
+
 normalizeArguments = (args) ->
   attributes = {}
   children = []
@@ -27,7 +36,7 @@ normalizeArguments = (args) ->
     if children not instanceof Array
       children = [ children ]
   else if length is 1
-    if typeof args[0] is 'string' or isElement(args[0]) or isText(args[0])
+    if canAppend(args[0])
       children = [ args[0] ]
     else if args[0] instanceof Array
       children = args[0]
@@ -85,6 +94,11 @@ parseTagSpec = (tagSpec) ->
   el
 
 
+class exports.Element
+  constructor: (@value) ->
+  getElement: -> textNode(@value)
+
+
 exports.text = textNode = (text) ->
   doc.createTextNode(text)
 
@@ -103,9 +117,10 @@ exports.appendChildren = (el, children) ->
   if children.length
     fragment = doc.createDocumentFragment()
     for child in children when child
-      for plugin in plugins when plugin.predicate(child)
-        value = plugin.handler(child)
-        child = value if value
+      if typeof child is 'string'
+        child = new exports.Element(child)
+      if child instanceof exports.Element
+        child = child.getElement()
       fragment.appendChild(child)
     el.appendChild(fragment)
 
@@ -147,16 +162,3 @@ exports.setAttr = (el, args...) ->
           exports.appendChildren(el, value)
       else
         el[directAttr] = value
-
-
-exports.registerPlugin = (plugin) ->
-  plugins.unshift(plugin)
-
-
-do exports.resetPlugins = ->
-  plugins = []
-  exports.registerPlugin
-    predicate: (element) ->
-      typeof element is 'string'
-    handler: (element) ->
-      return textNode(element)

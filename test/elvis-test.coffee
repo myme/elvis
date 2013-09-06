@@ -173,6 +173,10 @@ describe 'el', ->
       element = el('div', el.text('foo'))
       expect(element.innerHTML).to.equal('foo')
 
+    it 'can append Element instances', ->
+      element = el('div', new el.Element('foo'))
+      expect(element.innerHTML).to.equal('foo')
+
 
 describe 'el.css', ->
   it 'can create basic css properties', ->
@@ -254,33 +258,3 @@ describe 'el.text', ->
   it 'can be appended to regularly with el', ->
     element = el('div', el.text('foo'))
     expect(element.innerHTML).to.equal('foo')
-
-
-describe 'el.registerPlugin', ->
-  it 'can register plugin called on appended elements', ->
-    el.registerPlugin
-      predicate: -> true
-      handler: spy = sinon.spy()
-    el('div', [ 'foo', 'bar' ])
-    expect(spy).to.be.calledTwice
-    expect(spy).to.be.calledWith('foo')
-    expect(spy).to.be.calledWith('bar')
-
-  it 'can register plugin replacing elements', ->
-    children = [
-      el('span', 'baz')
-      el('span', 'quux')
-    ]
-    el.registerPlugin
-      predicate: -> true
-      handler: (child) -> children.shift()
-    expect(el('div', [ 'foo', 'bar' ]).innerHTML)
-      .to.equal('<span>baz</span><span>quux</span>')
-
-
-describe 'el.resetPlugins', ->
-  it 'removes registered plugins', ->
-    el.registerPlugin(spy = sinon.spy())
-    el.resetPlugins()
-    el('div', [ 'foo', 'bar' ])
-    expect(spy).not.to.be.called
