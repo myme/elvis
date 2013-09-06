@@ -5,5 +5,5 @@ describe 'el.backbone.model', ->
     model = new Backbone.Model(foo: 'bar')
     element = el('div', [ el.bind(model, 'foo') ])
     expect(element.innerHTML).to.be.equal('bar')
-    # model.set(foo: 'quux')
-    # expect(element.innerHTML).to.be.equal('quux')
+    model.set(foo: 'quux')
+    expect(element.innerHTML).to.be.equal('quux')
