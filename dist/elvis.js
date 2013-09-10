@@ -1,5 +1,5 @@
 (function() {
-  var directAttributes, doc, exports, isElement, isText, merge, normalizeArguments, parseAttrString, parseTagSpec, plugins, textNode,
+  var canAppend, directAttributes, doc, exports, isElement, isText, merge, normalizeArguments, parseAttrString, parseTagSpec, textNode,
     __hasProp = {}.hasOwnProperty,
     __slice = [].slice;
 
@@ -29,6 +29,10 @@
     return dest;
   };
 
+  canAppend = function(el) {
+    return typeof el === 'string' || isElement(el) || isText(el) || el instanceof exports.Element;
+  };
+
   normalizeArguments = function(args) {
     var attributes, children, length;
     attributes = {};
@@ -41,7 +45,7 @@
         children = [children];
       }
     } else if (length === 1) {
-      if (typeof args[0] === 'string' || isElement(args[0])) {
+      if (canAppend(args[0])) {
         children = [args[0]];
       } else if (args[0] instanceof Array) {
         children = args[0];
@@ -95,10 +99,6 @@
     return [tag, attributes];
   };
 
-  textNode = function(text) {
-    return doc.createTextNode(text);
-  };
-
   this.elvis = exports = function() {
     var args, attributes, children, el, tag, tagAttrs, tagSpecOrEl, _ref, _ref1;
     tagSpecOrEl = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
@@ -117,6 +117,27 @@
     return el;
   };
 
+  exports.Element = (function() {
+    function Element(value) {
+      this.value = value;
+    }
+
+    Element.prototype.getElement = function() {
+      return textNode(this.value);
+    };
+
+    Element.prototype.setAttr = function(obj, attr) {
+      return exports.setAttr(obj, attr, this.value);
+    };
+
+    return Element;
+
+  })();
+
+  exports.text = textNode = function(text) {
+    return doc.createTextNode(text);
+  };
+
   directAttributes = {
     'className': 'className',
     'id': 'id',
@@ -124,10 +145,8 @@
     'text': 'textContent'
   };
 
-  plugins = [];
-
   exports.appendChildren = function(el, children) {
-    var child, fragment, plugin, value, _i, _j, _len, _len1;
+    var child, fragment, _i, _len;
     if (children.length) {
       fragment = doc.createDocumentFragment();
       for (_i = 0, _len = children.length; _i < _len; _i++) {
@@ -135,12 +154,11 @@
         if (!(child)) {
           continue;
         }
-        for (_j = 0, _len1 = plugins.length; _j < _len1; _j++) {
-          plugin = plugins[_j];
-          value = plugin(child);
-          if (value) {
-            child = value;
-          }
+        if (typeof child === 'string') {
+          child = new exports.Element(child);
+        }
+        if (child instanceof exports.Element) {
+          child = child.getElement();
         }
         fragment.appendChild(child);
       }
@@ -186,36 +204,26 @@
       return _results;
     } else {
       attr = args[0], value = args[1];
-      directAttr = directAttributes[attr];
-      if (!directAttr) {
-        return el.setAttribute(attr, value);
+      if (value instanceof exports.Element) {
+        return value.setAttr(el, attr);
       } else {
-        if (attr === 'html' && typeof value !== 'string') {
-          el.innerHTML = '';
-          if (isElement(value)) {
-            return el.appendChild(value);
-          } else if (value instanceof Array) {
-            return exports.appendChildren(el, value);
-          }
+        directAttr = directAttributes[attr];
+        if (!directAttr) {
+          return el.setAttribute(attr, value);
         } else {
-          return el[directAttr] = value;
+          if (attr === 'html' && typeof value !== 'string') {
+            el.innerHTML = '';
+            if (isElement(value)) {
+              return el.appendChild(value);
+            } else if (value instanceof Array) {
+              return exports.appendChildren(el, value);
+            }
+          } else {
+            return el[directAttr] = value;
+          }
         }
       }
     }
   };
-
-  exports.registerPlugin = function(plugin) {
-    return plugins.unshift(plugin);
-  };
-
-  (exports.resetPlugins = function() {
-    plugins = [];
-    return exports.registerPlugin(function(child) {
-      if (typeof child === 'string') {
-        return textNode(child);
-      }
-      return null;
-    });
-  })();
 
 }).call(this);
