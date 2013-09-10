@@ -112,6 +112,11 @@ describe 'el', ->
       expect(element.tagName).to.equal('DIV')
       expect(element.innerHTML).to.equal('foo bar')
 
+    it 'undefined as second argument', ->
+      element = el('div', undefined)
+      expect(element.tagName).to.equal('DIV')
+      expect(element.innerHTML).to.equal('')
+
     it 'element text as array of text', ->
       element = el('div', [ 'foo', ' ', 'bar' ])
       expect(element.tagName).to.equal('DIV')
