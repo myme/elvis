@@ -2,7 +2,8 @@ el = @elvis
 
 
 class Binding extends el.Element
-  constructor: (@model, @attr, @transform) ->
+  constructor: (@model, attributes, @transform) ->
+    @attrs = attributes.split(/\s+/)
 
   getElement: ->
     if not @_element
@@ -11,18 +12,19 @@ class Binding extends el.Element
     @_element
 
   getValue: ->
-    value = @model.get(@attr)
-    if @transform then @transform(value) else value
+    values = (@model.get(attr) for attr in @attrs)
+    if @transform then @transform(values...) else values.join(' ')
 
-  setAttr: (obj, attr) ->
+  setAttr: (obj, attribute) ->
     @toObj = obj
-    @toAttr = attr
-    @model.on("change:#{@attr}", @update, this)
+    @toAttr = attribute
+    for attr in @attrs
+      @model.on("change:#{attr}", @update, this)
     @update()
 
   update: ->
     el.setAttr(@toObj, @toAttr, @getValue())
 
 
-el.bind = (model, attr, transform) ->
-  new Binding(model, attr, transform)
+el.bind = (model, attributes, transform) ->
+  new Binding(model, attributes, transform)

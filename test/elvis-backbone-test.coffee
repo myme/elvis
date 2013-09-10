@@ -29,3 +29,22 @@ describe 'el.backbone.model', ->
     expect(element.className).to.equal('bar')
     model.set(foo: 'quux')
     expect(element.className).to.equal('quux')
+
+  it 'can bound to space separated attributes', ->
+    model = new Backbone.Model(foo: 'bar', baz: 'quux')
+    element = el('div', el.bind(model, 'foo baz'))
+    expect(element.innerHTML).to.equal('bar quux')
+    model.set(foo: 'rab')
+    expect(element.innerHTML).to.equal('rab quux')
+    model.set(baz: 'xuuq')
+    expect(element.innerHTML).to.equal('rab xuuq')
+
+  it 'can transform space separated attributes', ->
+    model = new Backbone.Model(income: 9000, expenses: 7000)
+    displayProfit = (i, e) -> "Profit: " + (i - e)
+    element = el('div', el.bind(model, 'income expenses', displayProfit))
+    expect(element.innerHTML).to.equal('Profit: 2000')
+    model.set(income: 10000)
+    expect(element.innerHTML).to.equal('Profit: 3000')
+    model.set(expenses: 12000)
+    expect(element.innerHTML).to.equal('Profit: -2000')
