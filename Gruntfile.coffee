@@ -6,10 +6,8 @@ module.exports = (grunt) ->
     coffee:
       dist:
         files:
-          'dist/<%= pkg.name %>.js': ['lib/**/*.coffee']
-      test:
-        files:
-          'dist/<%= pkg.name %>-test.js': ['test/**/*.coffee']
+          'dist/elvis.js': ['lib/elvis.coffee']
+          'dist/elvis-backbone.js': ['lib/elvis-backbone.coffee']
 
     coffeelint:
       all: [
@@ -34,7 +32,8 @@ module.exports = (grunt) ->
     uglify:
       dist:
         files:
-          'dist/<%= pkg.name %>.min.js': 'dist/<%= pkg.name %>.js'
+          'dist/elvis.min.js': 'dist/elvis.js'
+          'dist/elvis-backbone.min.js': 'dist/elvis-backbone.js'
 
     watch:
       test:
@@ -52,5 +51,5 @@ module.exports = (grunt) ->
 
   grunt.registerTask('lint', ['coffeelint'])
   grunt.registerTask('test', ['lint', 'karma'])
-  grunt.registerTask('build', ['test', 'uglify'])
+  grunt.registerTask('build', ['test', 'coffee', 'uglify'])
   grunt.registerTask('default', ['build'])
