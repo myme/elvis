@@ -14,3 +14,10 @@ describe 'Elvis context', ->
         LI '3'
       ]
     expect(html.innerHTML).to.equal('<li>1</li><li>2</li><li>3</li>')
+
+  it 'can reference object instance variables', ->
+    obj =
+      text: 'foo'
+      render: el.htmlContext -> DIV SPAN @text
+    html = obj.render()
+    expect(html.innerHTML).to.equal('<span>foo</span>')
