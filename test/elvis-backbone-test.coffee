@@ -1,5 +1,10 @@
 el = @elvis
 
+createEvent = (type) ->
+  event = document.createEvent('HTMLEvents')
+  event.initEvent(type, true, false)
+  event
+
 describe 'el.backbone.model', ->
   it 'can handle basic bindings', ->
     model = new Backbone.Model(foo: 'bar')
@@ -48,3 +53,11 @@ describe 'el.backbone.model', ->
     expect(element.innerHTML).to.equal('Profit: 3000')
     model.set(expenses: 12000)
     expect(element.innerHTML).to.equal('Profit: -2000')
+
+  it 'can do two-way binding on input fields', ->
+    model = new Backbone.Model(foo: 'bar')
+    element = el('input', type: 'text', value: model.bindTo('foo'))
+    expect(element.value).to.equal('bar')
+    element.value = 'quux'
+    element.dispatchEvent(createEvent('change'))
+    expect(model.get('foo')).to.equal('quux')

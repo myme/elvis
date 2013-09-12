@@ -18,6 +18,9 @@ class Binding extends el.Element
   setAttr: (obj, attribute) ->
     @toObj = obj
     @toAttr = attribute
+    if obj.tagName is 'INPUT' and attribute is 'value'
+      el.on obj, 'change', =>
+        @model.set(@attrs[0], obj[attribute])
     for attr in @attrs
       @model.on("change:#{attr}", @update, this)
     @update()
