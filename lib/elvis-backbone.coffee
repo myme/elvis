@@ -26,5 +26,5 @@ class Binding extends el.Element
     el.setAttr(@toObj, @toAttr, @getValue())
 
 
-el.bind = (model, attributes, transform) ->
-  new Binding(model, attributes, transform)
+Backbone.Model::bindTo = (attributes, transform) ->
+  new Binding(this, attributes, transform)
