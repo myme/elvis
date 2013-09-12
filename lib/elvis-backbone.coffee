@@ -2,8 +2,12 @@ el = @elvis
 
 
 class Binding extends el.Element
-  constructor: (@model, attributes, @transform) ->
+  constructor: (@model, attributes) ->
     @attrs = attributes.split(/\s+/)
+
+  fromModel: (transform) ->
+    @_fromModelTransform = transform
+    this
 
   getElement: ->
     if not @_element
@@ -13,7 +17,8 @@ class Binding extends el.Element
 
   getValue: ->
     values = (@model.get(attr) for attr in @attrs)
-    if @transform then @transform(values...) else values.join(' ')
+    transform = @_fromModelTransform
+    if transform then transform(values...) else values.join(' ')
 
   setAttr: (obj, attribute) ->
     @toObj = obj
@@ -29,5 +34,5 @@ class Binding extends el.Element
     el.setAttr(@toObj, @toAttr, @getValue())
 
 
-Backbone.Model::bindTo = (attributes, transform) ->
-  new Binding(this, attributes, transform)
+Backbone.Model::bindTo = (attributes) ->
+  new Binding(this, attributes)

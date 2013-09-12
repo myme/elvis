@@ -23,7 +23,7 @@ describe 'el.backbone.model', ->
   it 'can transform binding value', ->
     model = new Backbone.Model(foo: 'bar')
     reverseString = (input) -> input.split('').reverse().join('')
-    element = el('div', model.bindTo('foo', reverseString))
+    element = el('div', model.bindTo('foo').fromModel(reverseString))
     expect(element.innerHTML).to.equal('rab')
     model.set(foo: 'quux')
     expect(element.innerHTML).to.equal('xuuq')
@@ -47,7 +47,8 @@ describe 'el.backbone.model', ->
   it 'can transform space separated attributes', ->
     model = new Backbone.Model(income: 9000, expenses: 7000)
     displayProfit = (i, e) -> "Profit: " + (i - e)
-    element = el('div', model.bindTo('income expenses', displayProfit))
+    binding = model.bindTo('income expenses').fromModel(displayProfit)
+    element = el('div', binding)
     expect(element.innerHTML).to.equal('Profit: 2000')
     model.set(income: 10000)
     expect(element.innerHTML).to.equal('Profit: 3000')
