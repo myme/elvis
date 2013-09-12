@@ -25,6 +25,7 @@ module.exports = (grunt) ->
             'bower_components/backbone/backbone.js'
             'lib/elvis.coffee'
             'lib/elvis-backbone.coffee'
+            'lib/elvis-context.coffee'
             'test/**/*.coffee'
           ]
           frameworks: ['mocha', 'chai', 'sinon-chai']
