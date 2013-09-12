@@ -5,7 +5,7 @@ createEvent = (type) ->
   event.initEvent(type, true, false)
   event
 
-describe 'el.backbone.model', ->
+describe 'Elvis Backbone.Model', ->
   it 'can handle basic bindings', ->
     model = new Backbone.Model(foo: 'bar')
     element = el('div', model.bindTo('foo'))
