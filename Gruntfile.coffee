@@ -20,6 +20,7 @@ module.exports = (grunt) ->
         options:
           browsers: ['PhantomJS']
           files: [
+            'bower_components/jquery/jquery.js'
             'bower_components/underscore/underscore.js'
             'bower_components/backbone/backbone.js'
             'lib/elvis.coffee'
