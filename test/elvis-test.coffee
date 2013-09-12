@@ -1,5 +1,10 @@
 el = @elvis
 
+createEvent = (type) ->
+  event = document.createEvent('HTMLEvents')
+  event.initEvent(type, true, false)
+  event
+
 describe 'el', ->
   describe 'can create', ->
     it 'div by default', ->
@@ -262,6 +267,15 @@ describe 'el.getAttr', ->
     element = el()
     el.setAttr(element, 'html', '<em>foo</em> bar')
     expect(el.getAttr(element, 'text')).to.equal('foo bar')
+
+
+describe 'el.on', ->
+  it 'can add event listeners', ->
+    element = el('input')
+    spy = sinon.spy()
+    el.on(element, 'change', spy)
+    element.dispatchEvent(createEvent('change'))
+    expect(spy).to.be.calledOnce
 
 
 describe 'el.text', ->

@@ -101,6 +101,10 @@ class exports.Element
     exports.setAttr(obj, attr, @value)
 
 
+exports.on = (element, event, callback) ->
+  element.addEventListener(event, callback)
+
+
 exports.text = textNode = (text) ->
   doc.createTextNode(text)
 
