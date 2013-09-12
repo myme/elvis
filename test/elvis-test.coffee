@@ -5,7 +5,7 @@ createEvent = (type) ->
   event.initEvent(type, true, false)
   event
 
-describe 'el', ->
+describe 'elvis', ->
   describe 'can create', ->
     it 'div by default', ->
       expect(el().tagName).to.equal('DIV')
@@ -188,7 +188,7 @@ describe 'el', ->
       expect(element.innerHTML).to.equal('foo')
 
 
-describe 'el.css', ->
+describe 'elvis.css', ->
   it 'can create basic css properties', ->
     css = el.css(color: '#00f')
     expect(css).to.equal('color:#00f;')
@@ -202,7 +202,7 @@ describe 'el.css', ->
     expect(css).to.equal('body{padding:10px;}')
 
 
-describe 'el.setAttr', ->
+describe 'elvis.setAttr', ->
   it 'can set element id', ->
     element = el()
     el.setAttr(element, 'id', 'some-id')
@@ -250,7 +250,7 @@ describe 'el.setAttr', ->
     expect(element.href).to.match(new RegExp('/foo/bar'))
 
 
-describe 'el.getAttr', ->
+describe 'elvis.getAttr', ->
   it 'can get element id', ->
     expect(el.getAttr(el('#some-id'), 'id')).to.equal('some-id')
 
@@ -269,7 +269,7 @@ describe 'el.getAttr', ->
     expect(el.getAttr(element, 'text')).to.equal('foo bar')
 
 
-describe 'el.on', ->
+describe 'elvis.on', ->
   it 'can add event listeners', ->
     element = el('input')
     spy = sinon.spy()
@@ -278,7 +278,7 @@ describe 'el.on', ->
     expect(spy).to.be.calledOnce
 
 
-describe 'el.text', ->
+describe 'elvis.text', ->
   it 'can create a text node', ->
     node = el.text('foo')
     expect(node.nodeType).to.equal(document.TEXT_NODE)
