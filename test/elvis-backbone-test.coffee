@@ -62,3 +62,24 @@ describe 'Elvis Backbone.Model', ->
     element.value = 'quux'
     element.dispatchEvent(createEvent('change'))
     expect(model.get('foo')).to.equal('quux')
+#    model.set(foo: 'bar')
+#    expect(element.value).to.equal('bar')
+
+#   it 'can handle short-hand input binding', ->
+#     model = new Backbone.Model(foo: 'bar')
+#     element = el('input', model.bindTo('foo'))
+#     expect(element.value).to.equal('bar')
+#     element.value = 'quux'
+#     element.dispatchEvent(createEvent('change'))
+#     expect(model.get('foo')).to.equal('quux')
+#     model.set(foo: 'bar')
+#     expect(element.value).to.equal('bar')
+
+#  it 'can transform value on input change', ->
+#    model = new Backbone.Model()
+#    element = el('input', type: 'text',
+#    value: model.bindTo('firstName lastName', parseName))
+#    element.value = 'John Doe'
+#    element.dispatchEvent(createEvent('change'))
+#    expect(model.get('firstName')).to.equal('John')
+#    expect(model.get('lastName')).to.equal('Doe')
