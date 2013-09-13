@@ -62,8 +62,8 @@ describe 'Elvis Backbone.Model', ->
     element.value = 'quux'
     element.dispatchEvent(createEvent('change'))
     expect(model.get('foo')).to.equal('quux')
-#    model.set(foo: 'bar')
-#    expect(element.value).to.equal('bar')
+    model.set(foo: 'bar')
+    expect(element.value).to.equal('bar')
 
 #   it 'can handle short-hand input binding', ->
 #     model = new Backbone.Model(foo: 'bar')

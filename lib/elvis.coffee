@@ -114,6 +114,7 @@ directAttributes =
   'id': 'id'
   'html': 'innerHTML'
   'text': 'textContent'
+  'value': 'value'
 
 
 exports.appendChildren = (el, children) ->
