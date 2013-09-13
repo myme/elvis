@@ -1,4 +1,17 @@
-describe 'Elvis context', ->
+el = @elvis
+
+
+describe 'Elvis HTML functions', ->
+  it 'exposes all HTML functions in an object', ->
+    expect(elvis.htmlFunctions.DIV).to.be.a('function')
+
+  it 'can create basic HTML with injected scope', ->
+    fn = el.htmlFunctions
+    html = -> fn.DIV fn.SPAN 'foo'
+    expect(html.innerHTML).to.equal('<span>foo</span>')
+
+
+describe 'Elvis HTML context', ->
   it 'does not contaminate the global scope', ->
     expect(window.DIV).to.be.undefined
 

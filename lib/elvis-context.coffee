@@ -13,13 +13,17 @@ do ->
     track tt u ul var video wbr xmp
   '''.split(/\s+/)
 
+  elvis.htmlFunctions = {}
+
   for tag in tags
-    eval """
-      var #{tag.toUpperCase()} = function () {
+    name = tag.toUpperCase()
+    elvis.htmlFunctions[name] = eval """
+      var #{name} = function () {
         var args = Array.prototype.slice.call(arguments)
         args.unshift('#{tag}')
         return elvis.apply(null, args)
       }
+      #{name}
     """
 
   elvis.htmlContext = (fn) ->
