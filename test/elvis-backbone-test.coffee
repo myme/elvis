@@ -75,11 +75,12 @@ describe 'Elvis Backbone.Model', ->
 #     model.set(foo: 'bar')
 #     expect(element.value).to.equal('bar')
 
-#  it 'can transform value on input change', ->
-#    model = new Backbone.Model()
-#    element = el('input', type: 'text',
-#    value: model.bindTo('firstName lastName', parseName))
-#    element.value = 'John Doe'
-#    element.dispatchEvent(createEvent('change'))
-#    expect(model.get('firstName')).to.equal('John')
-#    expect(model.get('lastName')).to.equal('Doe')
+  it 'can transform value on input change', ->
+    model = new Backbone.Model()
+    element = el 'input',
+      type: 'text',
+      value: model.bindTo('firstName lastName').toModel((v) -> v.split(/\s+/))
+    element.value = 'John Doe'
+    element.dispatchEvent(createEvent('change'))
+    expect(model.get('firstName')).to.equal('John')
+    expect(model.get('lastName')).to.equal('Doe')

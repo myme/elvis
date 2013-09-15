@@ -24,14 +24,22 @@ class Binding extends el.Element
     @toObj = obj
     @toAttr = attribute
     if obj.tagName is 'INPUT' and attribute is 'value'
-      el.on obj, 'change', =>
-        @model.set(@attrs[0], obj[attribute])
+      el.on(obj, 'change', => @updateModel(obj[attribute]))
     for attr in @attrs
       @model.on("change:#{attr}", @update, this)
     @update()
 
+  toModel: (transform) ->
+    @_toModelTransform = transform
+    this
+
   update: ->
     el.setAttr(@toObj, @toAttr, @getValue())
+
+  updateModel: (value) ->
+    value = if transform = @_toModelTransform then transform(value) else value
+    value = [value] if value not instanceof Array
+    @model.set(attr, value[idx]) for attr, idx in @attrs
 
 
 Backbone.Model::bindTo = (attributes) ->
