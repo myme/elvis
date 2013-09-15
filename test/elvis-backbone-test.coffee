@@ -35,9 +35,9 @@ describe 'Elvis Backbone.Model', ->
     model.set(foo: 'quux')
     expect(element.className).to.equal('quux')
 
-  it 'can bound to space separated attributes', ->
+  it 'can bound to multiple attributes', ->
     model = new Backbone.Model(foo: 'bar', baz: 'quux')
-    element = el('div', model.bindTo('foo baz'))
+    element = el('div', model.bindTo(['foo', 'baz']))
     expect(element.innerHTML).to.equal('bar quux')
     model.set(foo: 'rab')
     expect(element.innerHTML).to.equal('rab quux')
@@ -47,7 +47,7 @@ describe 'Elvis Backbone.Model', ->
   it 'can transform space separated attributes', ->
     model = new Backbone.Model(income: 9000, expenses: 7000)
     displayProfit = (i, e) -> "Profit: " + (i - e)
-    binding = model.bindTo('income expenses').fromModel(displayProfit)
+    binding = model.bindTo(['income', 'expenses']).fromModel(displayProfit)
     element = el('div', binding)
     expect(element.innerHTML).to.equal('Profit: 2000')
     model.set(income: 10000)
@@ -79,7 +79,9 @@ describe 'Elvis Backbone.Model', ->
     model = new Backbone.Model()
     element = el 'input',
       type: 'text',
-      value: model.bindTo('firstName lastName').toModel((v) -> v.split(/\s+/))
+      value: model
+        .bindTo(['firstName', 'lastName'])
+        .toModel((v) -> v.split(/\s+/))
     element.value = 'John Doe'
     element.dispatchEvent(createEvent('change'))
     expect(model.get('firstName')).to.equal('John')

@@ -3,7 +3,10 @@ el = @elvis
 
 class Binding extends el.Element
   constructor: (@model, attributes) ->
-    @attrs = attributes.split(/\s+/)
+    if attributes not instanceof Array
+      @attrs = [attributes]
+    else
+      @attrs = attributes
 
   fromModel: (transform) ->
     @_fromModelTransform = transform
