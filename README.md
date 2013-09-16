@@ -9,6 +9,11 @@
 
 ## Release notes
 
+### v0.2.2
+
+ * Change Backbone.Model API to use `.get` and `.set` for the transform
+   registration methods
+
 ### v0.2.1
 
  * Add Backbone.Model data-binding plugin

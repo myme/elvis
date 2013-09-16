@@ -99,6 +99,21 @@
     return [tag, attributes];
   };
 
+  /*
+    Function: elvis
+  
+    Examples:
+      elvis('div', 'This is a div with some text.');
+  
+      elvis('div#div-id.class1.class2', [
+        elvis('span', 'This is a child element.')
+      ]);
+  
+    Description:
+      Main element creation function.
+  */
+
+
   this.elvis = exports = function() {
     var args, attributes, children, el, tag, tagAttrs, tagSpecOrEl, _ref, _ref1;
     tagSpecOrEl = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
@@ -116,6 +131,16 @@
     exports.setAttr(el, attributes);
     return el;
   };
+
+  /*
+    Class: elvis.Element
+  
+    Description:
+      Base class intended to be overridden by plugins. The `elvis.Element` class
+      can be used as a base class for plugins which wish to perform special
+      behavior when elements are added to the DOM or set as element attributes.
+  */
+
 
   exports.Element = (function() {
     function Element(value) {
@@ -138,6 +163,14 @@
     return element.addEventListener(event, callback);
   };
 
+  /*
+    Function: elvis.text
+  
+    Description:
+      Create a plain text node.
+  */
+
+
   exports.text = textNode = function(text) {
     return doc.createTextNode(text);
   };
@@ -149,6 +182,14 @@
     'text': 'textContent',
     'value': 'value'
   };
+
+  /*
+    Function: elvis.appendChildren
+  
+    Description:
+      Appends child elements to an HTML element.
+  */
+
 
   exports.appendChildren = function(el, children) {
     var child, fragment, _i, _len;
@@ -170,6 +211,14 @@
       return el.appendChild(fragment);
     }
   };
+
+  /*
+    Function: elvis.css
+  
+    Description:
+      Generates `element.style`-compatible CSS strings.
+  */
+
 
   exports.css = function(styles) {
     var css, key, output, value;
@@ -194,6 +243,22 @@
       return el[directAttr];
     }
   };
+
+  /*
+    Function: elvis.setAttr
+  
+    Examples:
+      elvis.setAttr(el, html: 'This is html content');
+  
+      elvis.setAttr(el, {
+        href: 'http://example.com',
+        html: 'This is html content'
+      });
+  
+    Description:
+      Sets element attributes in a consistent way.
+  */
+
 
   exports.setAttr = function() {
     var args, attr, directAttr, el, value, _ref, _results;

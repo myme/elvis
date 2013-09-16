@@ -5,6 +5,16 @@
 
   el = this.elvis;
 
+  /*
+    Class: Binding
+  
+    Description:
+      Sub-class of `elvis.Element`. Handles data bindings using Backbone.Model.
+      Supports multi-attribute one- and two-way bindings. An instance of
+      `Binding` is returned by calling `model.bindTo`.
+  */
+
+
   Binding = (function(_super) {
     __extends(Binding, _super);
 
@@ -17,8 +27,55 @@
       }
     }
 
-    Binding.prototype.fromModel = function(transform) {
-      this._fromModelTransform = transform;
+    /*
+      Function: get
+    
+      Examples:
+        elvis('div', model.bindTo('foo').get(function (foo) {
+          return 'The current value of "foo" is ' + foo;
+        }));
+    
+        elvis('div', model.bindTo(['foo', 'bar']).get(function (foo, bar) {
+          return 'The current value of "foo" is ' + foo + ', ' +
+                 'and "bar" is ' + bar;
+        }));
+    
+      Description:
+        Defines a getter transform. The getter transform is passed the current
+        values of the bound properties in the order they were defined. The getter
+        transform must return a single value to be set on the target object.
+    */
+
+
+    Binding.prototype.get = function(transform) {
+      this._getTransform = transform;
+      return this;
+    };
+
+    /*
+      Function: set
+    
+      Examples:
+        elvis('input', {
+          value: model.bindTo(['firstName', 'lastName']).set(function (value) {
+            var split = value.split(/\s+/);
+            return {
+              firstName: split[0],
+              lastName: split[1],
+            };
+          })
+        });
+    
+      Description:
+        Defines a setter transform for two-way bindings. The setter transform
+        must either return a single value if the binding has one attribute, or
+        return an object containing the keys to be set on the model if the
+        binding is on multiple attributes.
+    */
+
+
+    Binding.prototype.set = function(transform) {
+      this._setTransform = transform;
       return this;
     };
 
@@ -42,7 +99,7 @@
         }
         return _results;
       }).call(this);
-      transform = this._fromModelTransform;
+      transform = this._getTransform;
       if (transform) {
         return transform.apply(null, values);
       } else {
@@ -68,28 +125,16 @@
       return this.update();
     };
 
-    Binding.prototype.toModel = function(transform) {
-      this._toModelTransform = transform;
-      return this;
-    };
-
     Binding.prototype.update = function() {
       return el.setAttr(this.toObj, this.toAttr, this.getValue());
     };
 
     Binding.prototype.updateModel = function(value) {
-      var attr, idx, transform, _i, _len, _ref, _results;
-      value = (transform = this._toModelTransform) ? transform(value) : value;
-      if (!(value instanceof Array)) {
-        value = [value];
+      if (this.attrs.length > 1) {
+        return this.model.set(this._setTransform(value));
+      } else {
+        return this.model.set(this.attrs[0], value);
       }
-      _ref = this.attrs;
-      _results = [];
-      for (idx = _i = 0, _len = _ref.length; _i < _len; idx = ++_i) {
-        attr = _ref[idx];
-        _results.push(this.model.set(attr, value[idx]));
-      }
-      return _results;
     };
 
     return Binding;
