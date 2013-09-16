@@ -152,6 +152,17 @@ describe 'elvis', ->
     expect(element.tagName).to.equal('DIV')
     expect(element.innerHTML).to.equal('foobar')
 
+  it 'can set element properties', ->
+    html = el('div', el('button', disabled: false)).innerHTML
+    expect(html).to.equal('<button></button>')
+
+    html = el('div', el('button', disabled: true)).innerHTML
+    expect(
+      html is '<button disabled></button>' or
+      html is '<button disabled=""></button>' or
+      html is '<button disabled="disabled"></button>'
+    ).to.be.true
+
   it 'can modify element setting text content', ->
     element = el('div', 'foo')
     el(element, 'bar')
@@ -248,6 +259,15 @@ describe 'elvis.setAttr', ->
     element = el('a')
     el.setAttr(element, href: new el.Element('/foo/bar'))
     expect(element.href).to.match(new RegExp('/foo/bar'))
+
+  it 'can set disabled', ->
+    element = el('button')
+
+    el.setAttr(element, disabled: true)
+    expect(element.disabled).to.be.true
+
+    el.setAttr(element, disabled: false)
+    expect(element.disabled).to.be.false
 
 
 describe 'elvis.getAttr', ->

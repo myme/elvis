@@ -144,6 +144,21 @@ directAttributes =
   'value': 'value'
 
 
+booleanAttributes =
+  'checked': true
+  'selected': true
+  'disabled': true
+  'readonly': true
+  'multiple': true
+  'ismap': true
+  'defer': true
+  'declare': true
+  'noresize': true
+  'nowrap': true
+  'noshade': true
+  'compact': true
+
+
 ###
   Function: elvis.appendChildren
 
@@ -210,7 +225,12 @@ exports.setAttr = (el, args...) ->
       value.setAttr(el, attr)
     else
       directAttr = directAttributes[attr]
-      if not directAttr
+      if booleanAttributes[attr]
+        if value
+          el[attr] = true
+        else
+          el.removeAttribute(attr)
+      else if not directAttr
         el.setAttribute(attr, value)
       else
         if attr is 'html' and typeof value isnt 'string'
