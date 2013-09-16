@@ -8,8 +8,52 @@ class Binding extends el.Element
     else
       @attrs = attributes
 
-  fromModel: (transform) ->
-    @_fromModelTransform = transform
+  ###
+    Function: get
+
+    Examples:
+      el('div', model.bindTo('foo').get(function (foo) {
+        return 'The current value of "foo" is ' + foo;
+      }));
+
+      el('div', model.bindTo(['foo', 'bar']).get(function (foo, bar) {
+        return 'The current value of "foo" is ' + foo + ', ' +
+               'and "bar" is ' + bar;
+      }));
+
+    Description:
+      Defines a getter transform. The getter transform is passed the current
+      values of the bound properties in the order they were defined. The getter
+      transform must return a single value to be set on the target object.
+  ###
+
+  get: (transform) ->
+    @_getTransform = transform
+    this
+
+  ###
+    Function: set
+
+    Examples:
+      el('input', {
+        value: model.bindTo(['firstName', 'lastName']).set(function (value) {
+          var split = value.split(/\s+/);
+          return {
+            firstName: split[0],
+            lastName: split[1],
+          };
+        })
+      });
+
+    Description:
+      Defines a setter transform for two-way bindings. The setter transform
+      must either return a single value if the binding has one attribute, or
+      return an object containing the keys to be set on the model if the
+      binding is on multiple attributes.
+  ###
+
+  set: (transform) ->
+    @_setTransform = transform
     this
 
   getElement: ->
@@ -20,7 +64,7 @@ class Binding extends el.Element
 
   getValue: ->
     values = (@model.get(attr) for attr in @attrs)
-    transform = @_fromModelTransform
+    transform = @_getTransform
     if transform then transform(values...) else values.join(' ')
 
   setAttr: (obj, attribute) ->
@@ -32,17 +76,14 @@ class Binding extends el.Element
       @model.on("change:#{attr}", @update, this)
     @update()
 
-  toModel: (transform) ->
-    @_toModelTransform = transform
-    this
-
   update: ->
     el.setAttr(@toObj, @toAttr, @getValue())
 
   updateModel: (value) ->
-    value = if transform = @_toModelTransform then transform(value) else value
-    value = [value] if value not instanceof Array
-    @model.set(attr, value[idx]) for attr, idx in @attrs
+    if @attrs.length > 1
+      @model.set(@_setTransform(value))
+    else
+      @model.set(@attrs[0], value)
 
 
 Backbone.Model::bindTo = (attributes) ->

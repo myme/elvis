@@ -23,7 +23,7 @@ describe 'Elvis Backbone.Model', ->
   it 'can transform binding value', ->
     model = new Backbone.Model(foo: 'bar')
     reverseString = (input) -> input.split('').reverse().join('')
-    element = el('div', model.bindTo('foo').fromModel(reverseString))
+    element = el('div', model.bindTo('foo').get(reverseString))
     expect(element.innerHTML).to.equal('rab')
     model.set(foo: 'quux')
     expect(element.innerHTML).to.equal('xuuq')
@@ -47,7 +47,7 @@ describe 'Elvis Backbone.Model', ->
   it 'can transform space separated attributes', ->
     model = new Backbone.Model(income: 9000, expenses: 7000)
     displayProfit = (i, e) -> "Profit: " + (i - e)
-    binding = model.bindTo(['income', 'expenses']).fromModel(displayProfit)
+    binding = model.bindTo(['income', 'expenses']).get(displayProfit)
     element = el('div', binding)
     expect(element.innerHTML).to.equal('Profit: 2000')
     model.set(income: 10000)
@@ -75,13 +75,14 @@ describe 'Elvis Backbone.Model', ->
 #     model.set(foo: 'bar')
 #     expect(element.value).to.equal('bar')
 
-  it 'can transform value on input change', ->
+  it 'can transform value on input change with setter transform', ->
     model = new Backbone.Model()
     element = el 'input',
       type: 'text',
-      value: model
-        .bindTo(['firstName', 'lastName'])
-        .toModel((v) -> v.split(/\s+/))
+      value: model.bindTo(['firstName', 'lastName']).set (value) ->
+        [first, last] = value.split(/\s+/)
+        firstName: first
+        lastName: last
     element.value = 'John Doe'
     element.dispatchEvent(createEvent('change'))
     expect(model.get('firstName')).to.equal('John')
