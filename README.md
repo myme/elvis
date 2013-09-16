@@ -9,6 +9,10 @@
 
 ## Release notes
 
+### v0.2.3
+
+ * Add support for boolean attributes
+
 ### v0.2.2
 
  * Change Backbone.Model API to use `.get` and `.set` for the transform

@@ -102,8 +102,10 @@
       transform = this._getTransform;
       if (transform) {
         return transform.apply(null, values);
-      } else {
+      } else if (values.length > 1) {
         return values.join(' ');
+      } else {
+        return values[0];
       }
     };
 

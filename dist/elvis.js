@@ -1,5 +1,5 @@
 (function() {
-  var canAppend, directAttributes, doc, exports, isElement, isText, merge, normalizeArguments, parseAttrString, parseTagSpec, textNode,
+  var booleanAttributes, canAppend, directAttributes, doc, exports, isElement, isText, merge, normalizeArguments, parseAttrString, parseTagSpec, textNode,
     __hasProp = {}.hasOwnProperty,
     __slice = [].slice;
 
@@ -183,6 +183,21 @@
     'value': 'value'
   };
 
+  booleanAttributes = {
+    'checked': true,
+    'selected': true,
+    'disabled': true,
+    'readonly': true,
+    'multiple': true,
+    'ismap': true,
+    'defer': true,
+    'declare': true,
+    'noresize': true,
+    'nowrap': true,
+    'noshade': true,
+    'compact': true
+  };
+
   /*
     Function: elvis.appendChildren
   
@@ -278,7 +293,13 @@
         return value.setAttr(el, attr);
       } else {
         directAttr = directAttributes[attr];
-        if (!directAttr) {
+        if (booleanAttributes[attr]) {
+          if (value) {
+            return el[attr] = true;
+          } else {
+            return el.removeAttribute(attr);
+          }
+        } else if (!directAttr) {
           return el.setAttribute(attr, value);
         } else {
           if (attr === 'html' && typeof value !== 'string') {
