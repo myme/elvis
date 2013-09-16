@@ -78,6 +78,19 @@ parseTagSpec = (tagSpec) ->
   [tag, attributes]
 
 
+###
+  Function: elvis
+
+  Examples:
+    elvis('div', 'This is a div with some text.');
+
+    elvis('div#div-id.class1.class2', [
+      elvis('span', 'This is a child element.')
+    ]);
+
+  Description:
+    Main element creation function.
+###
 @elvis = exports = (tagSpecOrEl, args...) ->
   [attributes, children] = normalizeArguments(args)
 
@@ -94,6 +107,14 @@ parseTagSpec = (tagSpec) ->
   el
 
 
+###
+  Class: elvis.Element
+
+  Description:
+    Base class intended to be overridden by plugins. The `elvis.Element` class
+    can be used as a base class for plugins which wish to perform special
+    behavior when elements are added to the DOM or set as element attributes.
+###
 class exports.Element
   constructor: (@value) ->
   getElement: -> textNode(@value)
@@ -105,6 +126,12 @@ exports.on = (element, event, callback) ->
   element.addEventListener(event, callback)
 
 
+###
+  Function: elvis.text
+
+  Description:
+    Create a plain text node.
+###
 exports.text = textNode = (text) ->
   doc.createTextNode(text)
 
@@ -117,6 +144,12 @@ directAttributes =
   'value': 'value'
 
 
+###
+  Function: elvis.appendChildren
+
+  Description:
+    Appends child elements to an HTML element.
+###
 exports.appendChildren = (el, children) ->
   if children.length
     fragment = doc.createDocumentFragment()
@@ -129,6 +162,12 @@ exports.appendChildren = (el, children) ->
     el.appendChild(fragment)
 
 
+###
+  Function: elvis.css
+
+  Description:
+    Generates `element.style`-compatible CSS strings.
+###
 exports.css = (styles) ->
   output = []
   for own key of styles
@@ -147,6 +186,20 @@ exports.getAttr = (el, attr) ->
     el[directAttr]
 
 
+###
+  Function: elvis.setAttr
+
+  Examples:
+    elvis.setAttr(el, html: 'This is html content');
+
+    elvis.setAttr(el, {
+      href: 'http://example.com',
+      html: 'This is html content'
+    });
+
+  Description:
+    Sets element attributes in a consistent way.
+###
 exports.setAttr = (el, args...) ->
   if args.length is 1
     for own attr, value of args[0]

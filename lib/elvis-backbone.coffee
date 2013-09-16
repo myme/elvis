@@ -1,6 +1,14 @@
 el = @elvis
 
 
+###
+  Class: Binding
+
+  Description:
+    Sub-class of `elvis.Element`. Handles data bindings using Backbone.Model.
+    Supports multi-attribute one- and two-way bindings. An instance of
+    `Binding` is returned by calling `model.bindTo`.
+###
 class Binding extends el.Element
   constructor: (@model, attributes) ->
     if attributes not instanceof Array
@@ -12,11 +20,11 @@ class Binding extends el.Element
     Function: get
 
     Examples:
-      el('div', model.bindTo('foo').get(function (foo) {
+      elvis('div', model.bindTo('foo').get(function (foo) {
         return 'The current value of "foo" is ' + foo;
       }));
 
-      el('div', model.bindTo(['foo', 'bar']).get(function (foo, bar) {
+      elvis('div', model.bindTo(['foo', 'bar']).get(function (foo, bar) {
         return 'The current value of "foo" is ' + foo + ', ' +
                'and "bar" is ' + bar;
       }));
@@ -35,7 +43,7 @@ class Binding extends el.Element
     Function: set
 
     Examples:
-      el('input', {
+      elvis('input', {
         value: model.bindTo(['firstName', 'lastName']).set(function (value) {
           var split = value.split(/\s+/);
           return {
