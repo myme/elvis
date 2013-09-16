@@ -73,7 +73,12 @@ class Binding extends el.Element
   getValue: ->
     values = (@model.get(attr) for attr in @attrs)
     transform = @_getTransform
-    if transform then transform(values...) else values.join(' ')
+    if transform
+      transform(values...)
+    else if values.length > 1
+      values.join(' ')
+    else
+      values[0]
 
   setAttr: (obj, attribute) ->
     @toObj = obj

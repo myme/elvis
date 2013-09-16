@@ -35,6 +35,19 @@ describe 'Elvis Backbone.Model', ->
     model.set(foo: 'quux')
     expect(element.className).to.equal('quux')
 
+  it 'can bind to boolean attribute', ->
+    model = new Backbone.Model(disabled: false)
+    element = el('div', el('button', disabled: model.bindTo('disabled')))
+    expect(element.innerHTML).to.equal('<button></button>')
+
+    model.set(disabled: true)
+    html = element.innerHTML
+    expect(
+      html is '<button disabled></button>' or
+      html is '<button disabled=""></button>' or
+      html is '<button disabled="disabled"></button>'
+    ).to.be.true
+
   it 'can bound to multiple attributes', ->
     model = new Backbone.Model(foo: 'bar', baz: 'quux')
     element = el('div', model.bindTo(['foo', 'baz']))
