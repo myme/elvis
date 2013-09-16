@@ -134,6 +134,10 @@
 
   })();
 
+  exports.on = function(element, event, callback) {
+    return element.addEventListener(event, callback);
+  };
+
   exports.text = textNode = function(text) {
     return doc.createTextNode(text);
   };
@@ -142,7 +146,8 @@
     'className': 'className',
     'id': 'id',
     'html': 'innerHTML',
-    'text': 'textContent'
+    'text': 'textContent',
+    'value': 'value'
   };
 
   exports.appendChildren = function(el, children) {

@@ -3,6 +3,12 @@
 
 ## Release notes
 
+### v0.2.1
+
+ * Add Backbone.Model data-binding plugin
+ * Proper handling of `value` attribute
+ * Add event listener function `el.on`
+
 ### v0.2.0
 
  * Add plugin for Backbone.Model support
