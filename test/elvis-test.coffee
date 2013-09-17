@@ -138,6 +138,10 @@ describe 'elvis', ->
       ])
       expect(element.innerHTML).to.equal('<em>foo</em> bar')
 
+    it 'handles HTML text sanely', ->
+      html = el('div', '<span>foo</span>').innerHTML
+      expect(html).to.equal('&lt;span&gt;foo&lt;/span&gt;')
+
   it 'ignores null', ->
     element = el('div', null)
     expect(element.tagName).to.equal('DIV')
