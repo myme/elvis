@@ -169,6 +169,9 @@ exports.appendChildren = (el, children) ->
   if children.length
     fragment = doc.createDocumentFragment()
     for child in children when child
+      if child instanceof Array
+        exports.appendChildren(fragment, child)
+        continue
       if typeof child is 'string'
         child = new exports.Element(child)
       if child instanceof exports.Element

@@ -198,6 +198,18 @@ describe 'elvis', ->
       element = el('div', new el.Element('foo'))
       expect(element.innerHTML).to.equal('foo')
 
+    it 'flattens out nested arrays', ->
+      html = el('div', [
+        el('span', 'foo')
+        [
+          el('span', 'bar')
+          [
+            el('span', 'baz')
+          ]
+        ]
+      ]).innerHTML
+      expect(html).to.equal('<span>foo</span><span>bar</span><span>baz</span>')
+
 
 describe 'elvis.css', ->
   it 'can create basic css properties', ->
