@@ -215,6 +215,10 @@
         if (!(child)) {
           continue;
         }
+        if (child instanceof Array) {
+          exports.appendChildren(fragment, child);
+          continue;
+        }
         if (typeof child === 'string') {
           child = new exports.Element(child);
         }

@@ -9,6 +9,10 @@
 
 ## Release notes
 
+### v0.2.4
+
+ * Flatten out nested arrays passed as child elements
+
 ### v0.2.3
 
  * Add support for boolean attributes
