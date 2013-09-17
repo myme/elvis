@@ -202,6 +202,7 @@ describe 'elvis', ->
       html = el('div', [
         el('span', 'foo')
         [
+          []  # empty no-op array
           el('span', 'bar')
           [
             el('span', 'baz')
@@ -209,6 +210,18 @@ describe 'elvis', ->
         ]
       ]).innerHTML
       expect(html).to.equal('<span>foo</span><span>bar</span><span>baz</span>')
+
+    it 'can use conditionals in array', ->
+      html = el('div', [
+        el('span', 'foo')
+        if true then [
+          el('span', 'this is true')
+        ]
+        if false then [
+          el('span', 'this is false')
+        ]
+      ]).innerHTML
+      expect(html).to.equal('<span>foo</span><span>this is true</span>')
 
 
 describe 'elvis.css', ->
