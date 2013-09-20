@@ -2,14 +2,14 @@ el = @elvis
 
 
 ###
-  Class: Binding
+  Class: ModelBinding
 
   Description:
     Sub-class of `elvis.Element`. Handles data bindings using Backbone.Model.
     Supports multi-attribute one- and two-way bindings. An instance of
     `Binding` is returned by calling `model.bindTo`.
 ###
-class Binding extends el.Element
+class ModelBinding extends el.Element
   constructor: (@model, attributes) ->
     if attributes not instanceof Array
       @attrs = [attributes]
@@ -100,4 +100,4 @@ class Binding extends el.Element
 
 
 Backbone.Model::bindTo = (attributes) ->
-  new Binding(this, attributes)
+  new ModelBinding(this, attributes)
