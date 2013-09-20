@@ -101,3 +101,12 @@ describe 'Elvis Backbone.Model', ->
     element.dispatchEvent(createEvent('change'))
     expect(model.get('firstName')).to.equal('John')
     expect(model.get('lastName')).to.equal('Doe')
+
+
+describe 'Elvis Backbone.Collection', ->
+  it 'can bind to .length attribute', ->
+    collection = new Backbone.Collection([])
+    element = el('div', collection.bindTo('length'))
+    expect(element.innerHTML).to.equal('0')
+    collection.add(foo: 'bar')
+    expect(element.innerHTML).to.equal('1')

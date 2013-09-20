@@ -101,3 +101,16 @@ class ModelBinding extends el.Element
 
 Backbone.Model::bindTo = (attributes) ->
   new ModelBinding(this, attributes)
+
+
+class CollectionBinding extends el.Element
+  constructor: (@collection, @attrs) ->
+
+  getElement: ->
+    if not @_element
+      @_element = el.text('0')
+    @_element
+
+
+Backbone.Collection::bindTo = (attribute) ->
+  new CollectionBinding(this, attribute)
