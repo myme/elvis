@@ -1,7 +1,8 @@
 (function() {
-  var booleanAttributes, canAppend, directAttributes, doc, exports, isElement, isText, merge, normalizeArguments, parseAttrString, parseTagSpec, textNode,
+  var SafeString, booleanAttributes, canAppend, directAttributes, doc, exports, isElement, isText, merge, normalizeArguments, oldSafe, parseAttrString, parseTagSpec, textNode, _ref,
     __hasProp = {}.hasOwnProperty,
-    __slice = [].slice;
+    __slice = [].slice,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   doc = this.document;
 
@@ -319,6 +320,62 @@
         }
       }
     }
+  };
+
+  SafeString = (function(_super) {
+    __extends(SafeString, _super);
+
+    function SafeString() {
+      _ref = SafeString.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    SafeString.prototype.toString = function() {
+      return this.value;
+    };
+
+    SafeString.prototype.getElement = function() {
+      var fragment, nodes;
+      nodes = exports('div', {
+        html: this.value
+      }).childNodes;
+      fragment = doc.createDocumentFragment();
+      while (nodes.length) {
+        fragment.appendChild(nodes[0]);
+      }
+      return fragment;
+    };
+
+    return SafeString;
+
+  })(exports.Element);
+
+  exports.safe = function() {
+    var args;
+    args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    return (function(func, args, ctor) {
+      ctor.prototype = func.prototype;
+      var child = new ctor, result = func.apply(child, args);
+      return Object(result) === result ? result : child;
+    })(SafeString, args, function(){});
+  };
+
+  oldSafe = null;
+
+  exports.infectString = function() {
+    oldSafe = String.prototype.safe;
+    return String.prototype.safe = function() {
+      return exports.safe(this.toString());
+    };
+  };
+
+  exports.restoreString = function() {
+    if (oldSafe) {
+      String.prototype.safe = oldSafe;
+    } else {
+      delete String.prototype.safe;
+    }
+    return oldSafe = null;
   };
 
 }).call(this);

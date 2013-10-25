@@ -1,12 +1,12 @@
 (function() {
-  var Binding, el,
+  var ModelBinding, el,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   el = this.elvis;
 
   /*
-    Class: Binding
+    Class: ModelBinding
   
     Description:
       Sub-class of `elvis.Element`. Handles data bindings using Backbone.Model.
@@ -15,10 +15,10 @@
   */
 
 
-  Binding = (function(_super) {
-    __extends(Binding, _super);
+  ModelBinding = (function(_super) {
+    __extends(ModelBinding, _super);
 
-    function Binding(model, attributes) {
+    function ModelBinding(model, attributes) {
       this.model = model;
       if (!(attributes instanceof Array)) {
         this.attrs = [attributes];
@@ -47,7 +47,7 @@
     */
 
 
-    Binding.prototype.get = function(transform) {
+    ModelBinding.prototype.get = function(transform) {
       this._getTransform = transform;
       return this;
     };
@@ -74,12 +74,12 @@
     */
 
 
-    Binding.prototype.set = function(transform) {
+    ModelBinding.prototype.set = function(transform) {
       this._setTransform = transform;
       return this;
     };
 
-    Binding.prototype.getElement = function() {
+    ModelBinding.prototype.getElement = function() {
       if (!this._element) {
         this._element = el.text();
         this.setAttr(this._element, 'text');
@@ -87,7 +87,7 @@
       return this._element;
     };
 
-    Binding.prototype.getValue = function() {
+    ModelBinding.prototype.getValue = function() {
       var attr, transform, values;
       values = (function() {
         var _i, _len, _ref, _results;
@@ -109,7 +109,7 @@
       }
     };
 
-    Binding.prototype.setAttr = function(obj, attribute) {
+    ModelBinding.prototype.setAttr = function(obj, attribute) {
       var attr, _i, _len, _ref,
         _this = this;
       this.toObj = obj;
@@ -127,11 +127,11 @@
       return this.update();
     };
 
-    Binding.prototype.update = function() {
+    ModelBinding.prototype.update = function() {
       return el.setAttr(this.toObj, this.toAttr, this.getValue());
     };
 
-    Binding.prototype.updateModel = function(value) {
+    ModelBinding.prototype.updateModel = function(value) {
       if (this.attrs.length > 1) {
         return this.model.set(this._setTransform(value));
       } else {
@@ -139,12 +139,12 @@
       }
     };
 
-    return Binding;
+    return ModelBinding;
 
   })(el.Element);
 
   Backbone.Model.prototype.bindTo = function(attributes) {
-    return new Binding(this, attributes);
+    return new ModelBinding(this, attributes);
   };
 
 }).call(this);
