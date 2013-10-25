@@ -244,3 +244,32 @@ exports.setAttr = (el, args...) ->
             exports.appendChildren(el, value)
         else
           el[directAttr] = value
+
+
+class SafeString extends exports.Element
+  toString: -> @value
+  getElement: ->
+    nodes = exports('div', html: @value).childNodes
+    fragment = doc.createDocumentFragment()
+    fragment.appendChild(nodes[0]) while nodes.length
+    fragment
+
+
+exports.safe = (args...) ->
+  new SafeString(args...)
+
+
+oldSafe = null
+
+
+exports.infectString = ->
+  oldSafe = String::safe
+  String::safe = -> exports.safe(@toString())
+
+
+exports.restoreString = ->
+  if oldSafe
+    String::safe = oldSafe
+  else
+    delete String::safe
+  oldSafe = null

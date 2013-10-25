@@ -336,3 +336,68 @@ describe 'elvis.text', ->
   it 'can be appended to regularly with el', ->
     element = el('div', el.text('foo'))
     expect(element.innerHTML).to.equal('foo')
+
+
+describe '.safe', ->
+  it 'is a function', ->
+    expect(el.safe).to.be.a('function')
+
+  it 'returns an el.Element instance', ->
+    isInstance = el.safe('foobar') instanceof el.Element
+    expect(isInstance).to.be.true
+
+  it 'returns an object with a proper .toString', ->
+    value = el.safe('foobar') + ''
+    expect(value).to.equal('foobar')
+
+  it 'can be inject HTML into an elvis element', ->
+    html = el('div', el.safe('foo<span>bar</span>baz')).innerHTML
+    expect(html).to.equal('foo<span>bar</span>baz')
+
+  it 'can insert HTML entities into an elvis element', ->
+    html = el('div', el.safe('foo &mdash; bar')).innerHTML
+    expect(html).to.equal('foo — bar')
+
+
+describe '.infectString', ->
+  it 'is a function', ->
+    expect(el.infectString).to.be.a('function')
+
+  it 'adds .safe to the String prototype', ->
+    el.infectString()
+    expect('foo'.safe).to.be.a('function')
+    el.restoreString()
+
+  it '"".safe returns an el.Element instance', ->
+    el.infectString()
+    isInstance = 'foo'.safe() instanceof el.Element
+    expect(isInstance).to.be.true
+    el.restoreString()
+
+  it 'can be used to mark strings as safe', ->
+    el.infectString()
+    html = el('div', 'foo<span>bar</span>baz'.safe()).innerHTML
+    expect(html).to.equal('foo<span>bar</span>baz')
+    el.restoreString()
+
+  it 'can create more elaborate markup', ->
+    el.infectString()
+    html = el('div', [
+      'foo &mdash; bar'.safe()
+      '<em>bold</em>'.safe()
+      el('span', 'blergh')
+    ]).innerHTML
+    expect(html).to.equal('foo — bar<em>bold</em><span>blergh</span>')
+    el.restoreString()
+
+
+describe '.restoreString', ->
+  it 'is a function', ->
+    expect(el.restoreString).to.be.a('function')
+
+  it 'removes .safe from the String prototype, restoring last value', ->
+    oldSafe = ->
+    String::safe = oldSafe
+    el.infectString()
+    el.restoreString()
+    expect(String::safe).to.equal(oldSafe)

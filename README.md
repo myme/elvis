@@ -9,6 +9,10 @@
 
 ## Release notes
 
+### v0.2.5
+
+ * Add support for "safe" strings which are not escaped
+
 ### v0.2.4
 
  * Flatten out nested arrays passed as child elements
