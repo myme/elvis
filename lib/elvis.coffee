@@ -255,6 +255,16 @@ class SafeString extends exports.Element
     fragment
 
 
+###
+  Function: elvis.safe
+
+  Examples:
+    elvis('div', elvis.safe('<span>foobar</span>'));
+
+  Description:
+    Marks a string value as "safe" which means that it will not be escaped when
+    injected into the DOM.
+###
 exports.safe = (args...) ->
   new SafeString(args...)
 
@@ -262,11 +272,32 @@ exports.safe = (args...) ->
 oldSafe = null
 
 
+###
+  Function: elvis.infectString
+
+  Examples:
+    elvis.infectstring();
+    elvis('div', '<span>foobar</span>'.safe());
+
+  Description:
+    Add a function with name 'safe' to the String prototype, in order to
+    simplify marking strings as safe, e.g. they will not be escaped.
+###
 exports.infectString = ->
   oldSafe = String::safe
   String::safe = -> exports.safe(@toString())
 
 
+###
+  Function: elvis.restoreString
+
+  Examples:
+    elvis.infectstring()
+    elvis.restoreString()
+
+  Description:
+    Restore the String prototype, removing injected functions.
+###
 exports.restoreString = ->
   if oldSafe
     String::safe = oldSafe
