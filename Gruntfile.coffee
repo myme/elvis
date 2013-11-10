@@ -3,32 +3,29 @@ module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON('package.json')
 
+    buster:
+      all: {}
+
     coffee:
       dist:
         files:
           'dist/elvis.js': ['lib/elvis.coffee']
           'dist/elvis-backbone.js': ['lib/elvis-backbone.coffee']
+      test:
+        files: [
+          expand: true
+          src: '{lib,test}/elvis*.coffee'
+          dest: 'tmp/'
+          rename: (dest, src) ->
+            filename = src.replace(/\.coffee$/, '.js')
+            return dest + filename
+        ]
 
     coffeelint:
       all: [
         'lib/**/*.coffee'
         'test/**/*.coffee'
       ]
-
-    karma:
-      test:
-        options:
-          browsers: ['PhantomJS']
-          files: [
-            'bower_components/jquery/jquery.js'
-            'bower_components/underscore/underscore.js'
-            'bower_components/backbone/backbone.js'
-            'lib/elvis.coffee'
-            'lib/elvis-backbone.coffee'
-            'test/**/*.coffee'
-          ]
-          frameworks: ['mocha', 'chai', 'sinon-chai']
-          singleRun: true
 
     uglify:
       dist:
@@ -44,13 +41,13 @@ module.exports = (grunt) ->
         ]
         tasks: ['test']
 
+  grunt.loadNpmTasks('grunt-buster')
   grunt.loadNpmTasks('grunt-coffeelint')
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-watch')
-  grunt.loadNpmTasks('grunt-karma')
 
   grunt.registerTask('lint', ['coffeelint'])
-  grunt.registerTask('test', ['lint', 'karma'])
-  grunt.registerTask('build', ['test', 'coffee', 'uglify'])
+  grunt.registerTask('test', ['lint', 'coffee:test', 'buster'])
+  grunt.registerTask('build', ['test', 'coffee:dist', 'uglify'])
   grunt.registerTask('default', ['build'])
