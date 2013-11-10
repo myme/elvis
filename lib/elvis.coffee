@@ -276,7 +276,7 @@ oldSafe = null
   Function: elvis.infectString
 
   Examples:
-    elvis.infectstring();
+    elvis.infectString();
     elvis('div', '<span>foobar</span>'.safe());
 
   Description:
@@ -292,7 +292,7 @@ exports.infectString = ->
   Function: elvis.restoreString
 
   Examples:
-    elvis.infectstring()
+    elvis.infectString()
     elvis.restoreString()
 
   Description:
