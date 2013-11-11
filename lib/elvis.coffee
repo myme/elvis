@@ -1,12 +1,16 @@
 doc = @document
 
 
+ELEMENT_NODE = 1
+TEXT_NODE = 3
+
+
 isElement = (el) ->
-  el?.nodeType and el.nodeType is doc.ELEMENT_NODE
+  el?.nodeType and el.nodeType is ELEMENT_NODE
 
 
 isText = (el) ->
-  el?.nodeType and el.nodeType is doc.TEXT_NODE
+  el?.nodeType and el.nodeType is TEXT_NODE
 
 
 merge = (left, right) ->
@@ -136,11 +140,17 @@ exports.text = textNode = (text) ->
   doc.createTextNode(text)
 
 
+# Some browsers support `innerText` while others use `textContent`
+textAttr = do ->
+  element = doc.createElement('div')
+  if 'textContent' of element then 'textContent' else 'innerText'
+
+
 directAttributes =
   'className': 'className'
   'id': 'id'
   'html': 'innerHTML'
-  'text': 'textContent'
+  'text': textAttr
   'value': 'value'
 
 
@@ -237,13 +247,16 @@ exports.setAttr = (el, args...) ->
         el.setAttribute(attr, value)
       else
         if attr is 'html' and typeof value isnt 'string'
-          el.innerHTML = ''
+          el.removeChild(el.lastChild) while el.lastChild
           if isElement(value)
             el.appendChild(value)
           else if value instanceof Array
             exports.appendChildren(el, value)
+        else if attr is 'text' and isText(el)
+          el.nodeValue = value
         else
           el[directAttr] = value
+  null
 
 
 class SafeString extends exports.Element
