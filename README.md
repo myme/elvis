@@ -9,6 +9,10 @@
 
 ## Release notes
 
+### v0.2.6 (2013-11-11)
+
+ * Fix #10 - Several Internet Explorer 8 issues
+
 ### v0.2.5
 
  * Add support for "safe" strings which are not escaped

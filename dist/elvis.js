@@ -1,17 +1,21 @@
 (function() {
-  var SafeString, booleanAttributes, canAppend, directAttributes, doc, exports, isElement, isText, merge, normalizeArguments, oldSafe, parseAttrString, parseTagSpec, textNode, _ref,
+  var ELEMENT_NODE, SafeString, TEXT_NODE, booleanAttributes, canAppend, directAttributes, doc, exports, isElement, isText, merge, normalizeArguments, oldSafe, parseAttrString, parseTagSpec, textAttr, textNode, _ref,
     __hasProp = {}.hasOwnProperty,
     __slice = [].slice,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   doc = this.document;
 
+  ELEMENT_NODE = 1;
+
+  TEXT_NODE = 3;
+
   isElement = function(el) {
-    return (el != null ? el.nodeType : void 0) && el.nodeType === doc.ELEMENT_NODE;
+    return (el != null ? el.nodeType : void 0) && el.nodeType === ELEMENT_NODE;
   };
 
   isText = function(el) {
-    return (el != null ? el.nodeType : void 0) && el.nodeType === doc.TEXT_NODE;
+    return (el != null ? el.nodeType : void 0) && el.nodeType === TEXT_NODE;
   };
 
   merge = function(left, right) {
@@ -176,11 +180,21 @@
     return doc.createTextNode(text);
   };
 
+  textAttr = (function() {
+    var element;
+    element = doc.createElement('div');
+    if ('textContent' in element) {
+      return 'textContent';
+    } else {
+      return 'innerText';
+    }
+  })();
+
   directAttributes = {
     'className': 'className',
     'id': 'id',
     'html': 'innerHTML',
-    'text': 'textContent',
+    'text': textAttr,
     'value': 'value'
   };
 
@@ -281,45 +295,48 @@
 
 
   exports.setAttr = function() {
-    var args, attr, directAttr, el, value, _ref, _results;
+    var args, attr, directAttr, el, value, _ref;
     el = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
     if (args.length === 1) {
       _ref = args[0];
-      _results = [];
       for (attr in _ref) {
         if (!__hasProp.call(_ref, attr)) continue;
         value = _ref[attr];
-        _results.push(exports.setAttr(el, attr, value));
+        exports.setAttr(el, attr, value);
       }
-      return _results;
     } else {
       attr = args[0], value = args[1];
       if (value instanceof exports.Element) {
-        return value.setAttr(el, attr);
+        value.setAttr(el, attr);
       } else {
         directAttr = directAttributes[attr];
         if (booleanAttributes[attr]) {
           if (value) {
-            return el[attr] = true;
+            el[attr] = true;
           } else {
-            return el.removeAttribute(attr);
+            el.removeAttribute(attr);
           }
         } else if (!directAttr) {
-          return el.setAttribute(attr, value);
+          el.setAttribute(attr, value);
         } else {
           if (attr === 'html' && typeof value !== 'string') {
-            el.innerHTML = '';
-            if (isElement(value)) {
-              return el.appendChild(value);
-            } else if (value instanceof Array) {
-              return exports.appendChildren(el, value);
+            while (el.lastChild) {
+              el.removeChild(el.lastChild);
             }
+            if (isElement(value)) {
+              el.appendChild(value);
+            } else if (value instanceof Array) {
+              exports.appendChildren(el, value);
+            }
+          } else if (attr === 'text' && isText(el)) {
+            el.nodeValue = value;
           } else {
-            return el[directAttr] = value;
+            el[directAttr] = value;
           }
         }
       }
     }
+    return null;
   };
 
   SafeString = (function(_super) {
@@ -350,6 +367,18 @@
 
   })(exports.Element);
 
+  /*
+    Function: elvis.safe
+  
+    Examples:
+      elvis('div', elvis.safe('<span>foobar</span>'));
+  
+    Description:
+      Marks a string value as "safe" which means that it will not be escaped when
+      injected into the DOM.
+  */
+
+
   exports.safe = function() {
     var args;
     args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
@@ -362,12 +391,37 @@
 
   oldSafe = null;
 
+  /*
+    Function: elvis.infectString
+  
+    Examples:
+      elvis.infectString();
+      elvis('div', '<span>foobar</span>'.safe());
+  
+    Description:
+      Add a function with name 'safe' to the String prototype, in order to
+      simplify marking strings as safe, e.g. they will not be escaped.
+  */
+
+
   exports.infectString = function() {
     oldSafe = String.prototype.safe;
     return String.prototype.safe = function() {
       return exports.safe(this.toString());
     };
   };
+
+  /*
+    Function: elvis.restoreString
+  
+    Examples:
+      elvis.infectString()
+      elvis.restoreString()
+  
+    Description:
+      Restore the String prototype, removing injected functions.
+  */
+
 
   exports.restoreString = function() {
     if (oldSafe) {
