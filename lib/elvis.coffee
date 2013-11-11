@@ -247,7 +247,7 @@ exports.setAttr = (el, args...) ->
         el.setAttribute(attr, value)
       else
         if attr is 'html' and typeof value isnt 'string'
-          el.innerHTML = ''
+          el.removeChild(el.lastChild) while el.lastChild
           if isElement(value)
             el.appendChild(value)
           else if value instanceof Array
