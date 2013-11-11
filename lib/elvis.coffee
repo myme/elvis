@@ -1,12 +1,16 @@
 doc = @document
 
 
+ELEMENT_NODE = 1
+TEXT_NODE = 3
+
+
 isElement = (el) ->
-  el?.nodeType and el.nodeType is doc.ELEMENT_NODE
+  el?.nodeType and el.nodeType is ELEMENT_NODE
 
 
 isText = (el) ->
-  el?.nodeType and el.nodeType is doc.TEXT_NODE
+  el?.nodeType and el.nodeType is TEXT_NODE
 
 
 merge = (left, right) ->
