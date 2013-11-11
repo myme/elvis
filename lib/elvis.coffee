@@ -252,8 +252,11 @@ exports.setAttr = (el, args...) ->
             el.appendChild(value)
           else if value instanceof Array
             exports.appendChildren(el, value)
+        else if attr is 'text' and isText(el)
+          el.nodeValue = value
         else
           el[directAttr] = value
+  null
 
 
 class SafeString extends exports.Element
