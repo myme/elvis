@@ -139,7 +139,7 @@ exports.text = textNode = (text) ->
 # Some browsers support `innerText` while others use `textContent`
 textAttr = do ->
   element = doc.createElement('div')
-  if 'innerText' of element then 'innerText' else 'textContent'
+  if 'textContent' of element then 'textContent' else 'innerText'
 
 
 directAttributes =
