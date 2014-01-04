@@ -101,3 +101,36 @@ describe 'Elvis Backbone.Model', ->
     element.dispatchEvent(createEvent('change'))
     expect(model.get('firstName')).to.equal('John')
     expect(model.get('lastName')).to.equal('Doe')
+
+  it 'can bind using bindTo in a Backbone View', ->
+    class View extends Backbone.View
+      render: ->
+        el(@el, @bindTo('value'))
+        this
+
+    model = new Backbone.Model(value: 'foo')
+    view = new View(model: model).render()
+
+    expect(view.el.innerHTML).to.equal('foo')
+
+    model.set(value: 'bar')
+    expect(view.el.innerHTML).to.equal('bar')
+
+  it 'removes Backbone View bindings when the view is destroyed', ->
+    binding = null
+    class View extends Backbone.View
+      render: ->
+        el(@el, binding = @bindTo('value'))
+        this
+
+    model = new Backbone.Model(value: 'foo')
+    view = new View(model: model).render()
+    spy = sinon.spy(binding, 'update')
+
+    model.set(value: 'bar')
+    expect(spy).to.be.calledOnce
+    spy.reset()
+
+    view.remove()
+    model.set(value: 'quux')
+    expect(spy).to.not.be.called

@@ -1,16 +1,19 @@
 el = @elvis
 
 
+virtual = -> ->
+  throw new Exception('Must be implemented in sub class')
+
+
 ###
-  Class: ModelBinding
+  Class: Binding
 
   Description:
-    Sub-class of `elvis.Element`. Handles data bindings using Backbone.Model.
-    Supports multi-attribute one- and two-way bindings. An instance of
-    `Binding` is returned by calling `model.bindTo`.
+    Sub-class of `elvis.Element`. Handles data bindings in a generic way.
+    Supports multi-attribute one- and two-way bindings.
 ###
-class ModelBinding extends el.Element
-  constructor: (@model, attributes) ->
+class Binding extends el.Element
+  constructor: (@context, attributes) ->
     if attributes not instanceof Array
       @attrs = [attributes]
     else
@@ -70,8 +73,10 @@ class ModelBinding extends el.Element
       @setAttr(@_element, 'text')
     @_element
 
-  getValue: ->
-    values = (@model.get(attr) for attr in @attrs)
+  getValue: virtual()
+
+  _getValue: ->
+    values = (@getValue(attr) for attr in @attrs)
     transform = @_getTransform
     if transform
       transform(values...)
@@ -85,19 +90,40 @@ class ModelBinding extends el.Element
     @toAttr = attribute
     if obj.tagName is 'INPUT' and attribute is 'value'
       el.on(obj, 'change', => @updateModel(obj[attribute]))
-    for attr in @attrs
-      @model.on("change:#{attr}", @update, this)
+    @subscribe(attr) for attr in @attrs
     @update()
 
+  setValue: virtual()
+
+  subscribe: virtual()
+
   update: ->
-    el.setAttr(@toObj, @toAttr, @getValue())
+    el.setAttr(@toObj, @toAttr, @_getValue())
 
   updateModel: (value) ->
     if @attrs.length > 1
-      @model.set(@_setTransform(value))
+      @setValue(@_setTransform(value))
     else
-      @model.set(@attrs[0], value)
+      @setValue(@attrs[0], value)
 
 
-Backbone.Model::bindTo = (attributes) ->
-  new ModelBinding(this, attributes)
+class ModelBinding extends Binding
+  getValue: (args...) -> @context.get(args...)
+  setValue: (args...) -> @context.set(args...)
+  subscribe: (attr) ->
+    @context.on("change:#{attr}", @update, this)
+
+
+Backbone.Model::bindTo = ->
+  new ModelBinding(this, arguments...)
+
+
+class ViewBinding extends Binding
+  getValue: (args...) -> @context.model.get(args...)
+  setValue: (args...) -> @context.model.set(args...)
+  subscribe: (attr) ->
+    @context.listenTo(@context.model, "change:#{attr}", => @update())
+
+
+Backbone.View::bindTo = ->
+  new ViewBinding(this, arguments...)
