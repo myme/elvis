@@ -1,25 +1,31 @@
 (function() {
-  var ModelBinding, el,
+  var Binding, ModelBinding, ViewBinding, el, virtual, _ref, _ref1,
     __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __slice = [].slice;
 
   el = this.elvis;
 
+  virtual = function() {
+    return function() {
+      throw new Exception('Must be implemented in sub class');
+    };
+  };
+
   /*
-    Class: ModelBinding
+    Class: Binding
   
     Description:
-      Sub-class of `elvis.Element`. Handles data bindings using Backbone.Model.
-      Supports multi-attribute one- and two-way bindings. An instance of
-      `Binding` is returned by calling `model.bindTo`.
+      Sub-class of `elvis.Element`. Handles data bindings in a generic way.
+      Supports multi-attribute one- and two-way bindings.
   */
 
 
-  ModelBinding = (function(_super) {
-    __extends(ModelBinding, _super);
+  Binding = (function(_super) {
+    __extends(Binding, _super);
 
-    function ModelBinding(model, attributes) {
-      this.model = model;
+    function Binding(context, attributes) {
+      this.context = context;
       if (!(attributes instanceof Array)) {
         this.attrs = [attributes];
       } else {
@@ -47,7 +53,7 @@
     */
 
 
-    ModelBinding.prototype.get = function(transform) {
+    Binding.prototype.get = function(transform) {
       this._getTransform = transform;
       return this;
     };
@@ -74,12 +80,12 @@
     */
 
 
-    ModelBinding.prototype.set = function(transform) {
+    Binding.prototype.set = function(transform) {
       this._setTransform = transform;
       return this;
     };
 
-    ModelBinding.prototype.getElement = function() {
+    Binding.prototype.getElement = function() {
       if (!this._element) {
         this._element = el.text();
         this.setAttr(this._element, 'text');
@@ -87,7 +93,9 @@
       return this._element;
     };
 
-    ModelBinding.prototype.getValue = function() {
+    Binding.prototype.getValue = virtual();
+
+    Binding.prototype._getValue = function() {
       var attr, transform, values;
       values = (function() {
         var _i, _len, _ref, _results;
@@ -95,7 +103,7 @@
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           attr = _ref[_i];
-          _results.push(this.model.get(attr));
+          _results.push(this.getValue(attr));
         }
         return _results;
       }).call(this);
@@ -109,7 +117,7 @@
       }
     };
 
-    ModelBinding.prototype.setAttr = function(obj, attribute) {
+    Binding.prototype.setAttr = function(obj, attribute) {
       var attr, _i, _len, _ref,
         _this = this;
       this.toObj = obj;
@@ -122,29 +130,104 @@
       _ref = this.attrs;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         attr = _ref[_i];
-        this.model.on("change:" + attr, this.update, this);
+        this.subscribe(attr);
       }
       return this.update();
     };
 
-    ModelBinding.prototype.update = function() {
-      return el.setAttr(this.toObj, this.toAttr, this.getValue());
+    Binding.prototype.setValue = virtual();
+
+    Binding.prototype.subscribe = virtual();
+
+    Binding.prototype.update = function() {
+      return el.setAttr(this.toObj, this.toAttr, this._getValue());
     };
 
-    ModelBinding.prototype.updateModel = function(value) {
+    Binding.prototype.updateModel = function(value) {
       if (this.attrs.length > 1) {
-        return this.model.set(this._setTransform(value));
+        return this.setValue(this._setTransform(value));
       } else {
-        return this.model.set(this.attrs[0], value);
+        return this.setValue(this.attrs[0], value);
       }
+    };
+
+    return Binding;
+
+  })(el.Element);
+
+  ModelBinding = (function(_super) {
+    __extends(ModelBinding, _super);
+
+    function ModelBinding() {
+      _ref = ModelBinding.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    ModelBinding.prototype.getValue = function() {
+      var args, _ref1;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return (_ref1 = this.context).get.apply(_ref1, args);
+    };
+
+    ModelBinding.prototype.setValue = function() {
+      var args, _ref1;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return (_ref1 = this.context).set.apply(_ref1, args);
+    };
+
+    ModelBinding.prototype.subscribe = function(attr) {
+      return this.context.on("change:" + attr, this.update, this);
     };
 
     return ModelBinding;
 
-  })(el.Element);
+  })(Binding);
 
-  Backbone.Model.prototype.bindTo = function(attributes) {
-    return new ModelBinding(this, attributes);
+  Backbone.Model.prototype.bindTo = function() {
+    return (function(func, args, ctor) {
+      ctor.prototype = func.prototype;
+      var child = new ctor, result = func.apply(child, args);
+      return Object(result) === result ? result : child;
+    })(ModelBinding, [this].concat(__slice.call(arguments)), function(){});
+  };
+
+  ViewBinding = (function(_super) {
+    __extends(ViewBinding, _super);
+
+    function ViewBinding() {
+      _ref1 = ViewBinding.__super__.constructor.apply(this, arguments);
+      return _ref1;
+    }
+
+    ViewBinding.prototype.getValue = function() {
+      var args, _ref2;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return (_ref2 = this.context.model).get.apply(_ref2, args);
+    };
+
+    ViewBinding.prototype.setValue = function() {
+      var args, _ref2;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return (_ref2 = this.context.model).set.apply(_ref2, args);
+    };
+
+    ViewBinding.prototype.subscribe = function(attr) {
+      var _this = this;
+      return this.context.listenTo(this.context.model, "change:" + attr, function() {
+        return _this.update();
+      });
+    };
+
+    return ViewBinding;
+
+  })(Binding);
+
+  Backbone.View.prototype.bindTo = function() {
+    return (function(func, args, ctor) {
+      ctor.prototype = func.prototype;
+      var child = new ctor, result = func.apply(child, args);
+      return Object(result) === result ? result : child;
+    })(ViewBinding, [this].concat(__slice.call(arguments)), function(){});
   };
 
 }).call(this);

@@ -9,7 +9,7 @@
 
 ## Release notes
 
-### v0.2.7 (UNRELEASED)
+### v0.2.7 (2014-01-06)
 
  * Add `.bindTo` to Backbone Views
 
