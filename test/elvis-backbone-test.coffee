@@ -118,6 +118,8 @@ describe 'Elvis Backbone.View', ->
     model.set(value: 'bar')
     expect(view.el.innerHTML).to.equal('bar')
 
+
+describe 'Elvis Backbone.View', ->
   it 'removes Backbone View bindings when the view is destroyed', ->
     binding = null
     class View extends Backbone.View
