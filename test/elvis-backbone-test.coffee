@@ -36,6 +36,20 @@ describe 'Elvis Backbone.Model', ->
     model.set(foo: 'quux')
     expect(element.className).to.equal('quux')
 
+  it 'can bind to style attributes', ->
+    model = new Backbone.Model(left: '10px', margin: '3em')
+    element = el 'div', style:
+      left: model.bindTo('left')
+      marginLeft: model.bindTo('margin')
+
+    expect(element.style.left).to.equal('10px')
+    expect(element.style.marginLeft).to.equal('3em')
+
+    model.set(left: '20px', margin: 'auto')
+
+    expect(element.style.left).to.equal('20px')
+    expect(element.style.marginLeft).to.equal('auto')
+
   it 'can bind to boolean attribute', ->
     model = new Backbone.Model(disabled: false)
     element = el('div', el('button', disabled: model.bindTo('disabled')))

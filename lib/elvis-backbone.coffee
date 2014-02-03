@@ -85,11 +85,11 @@ class Binding extends el.Element
     else
       values[0]
 
-  setAttr: (obj, attribute) ->
+  setAttr: (obj, path...) ->
     @toObj = obj
-    @toAttr = attribute
-    if obj.tagName is 'INPUT' and attribute is 'value'
-      el.on(obj, 'change', => @updateModel(obj[attribute]))
+    @toAttr = path
+    if obj.tagName is 'INPUT' and path[0] is 'value'
+      el.on(obj, 'change', => @updateModel(obj.value))
     @subscribe(attr) for attr in @attrs
     @update()
 
@@ -98,7 +98,12 @@ class Binding extends el.Element
   subscribe: virtual()
 
   update: ->
-    el.setAttr(@toObj, @toAttr, @_getValue())
+    attr = @_getValue()
+    for part in @toAttr.slice().reverse()
+      tmp = {}
+      tmp[part] = attr
+      attr = tmp
+    el.setAttr(@toObj, attr)
 
   updateModel: (value) ->
     if @attrs.length > 1

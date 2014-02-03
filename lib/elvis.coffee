@@ -261,11 +261,15 @@ exports.setAttr = (el, args...) ->
   null
 
 
-setStyleAttr = (el, value) ->
-  if typeof value is 'string'
-    el.setAttribute('style', value)
+setStyleAttr = (el, styleValue) ->
+  if typeof styleValue is 'string'
+    el.setAttribute('style', styleValue)
   else
-    el.style[attr] = v for own attr, v of value
+    for own key, val of styleValue
+      if val instanceof exports.Element
+        val.setAttr(el, 'style', key)
+      else
+        el.style[key] = val
 
 class SafeString extends exports.Element
   toString: -> @value
