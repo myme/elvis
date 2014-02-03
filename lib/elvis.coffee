@@ -152,7 +152,7 @@ textAttr = do ->
   if 'textContent' of element then 'textContent' else 'innerText'
 
 
-directAttributes =
+attrMap =
   'className': 'className'
   'id': 'id'
   'html': 'innerHTML'
@@ -160,19 +160,62 @@ directAttributes =
   'value': 'value'
 
 
-booleanAttributes =
-  'checked': true
-  'selected': true
-  'disabled': true
-  'readonly': true
-  'multiple': true
-  'ismap': true
-  'defer': true
-  'declare': true
-  'noresize': true
-  'nowrap': true
-  'noshade': true
-  'compact': true
+setDirectAttr = (el, attr, value) ->
+  if attr is 'html' and typeof value isnt 'string'
+    el.removeChild(el.lastChild) while el.lastChild
+    if isElement(value)
+      el.appendChild(value)
+    else if value instanceof Array
+      exports.appendChildren(el, value)
+  else if attr is 'text' and isText(el)
+    el.nodeValue = value
+  else
+    el[attrMap[attr]] = value
+
+
+setBooleanAttr = (el, attr, value) ->
+  if value
+    el[attr] = true
+  else
+    el.removeAttribute(attr)
+
+
+setStyleAttr = (el, _, styleValue) ->
+  if typeof styleValue is 'string'
+    el.setAttribute('style', styleValue)
+  else
+    for own key, val of styleValue
+      if val instanceof exports.Element
+        val.setAttr(el, 'style', key)
+      else
+        el.style[key] = val
+  null
+
+
+attrSetters =
+  # Boolean attributes
+  'checked': setBooleanAttr
+  'selected': setBooleanAttr
+  'disabled': setBooleanAttr
+  'readonly': setBooleanAttr
+  'multiple': setBooleanAttr
+  'ismap': setBooleanAttr
+  'defer': setBooleanAttr
+  'declare': setBooleanAttr
+  'noresize': setBooleanAttr
+  'nowrap': setBooleanAttr
+  'noshade': setBooleanAttr
+  'compact': setBooleanAttr
+
+  # Style attribute
+  'style': setStyleAttr
+
+  # Direct attributes
+  'className': setDirectAttr
+  'id': setDirectAttr
+  'html': setDirectAttr
+  'text': setDirectAttr
+  'value': setDirectAttr
 
 
 ###
@@ -215,9 +258,8 @@ exports.css = (styles) ->
 
 
 exports.getAttr = (el, attr) ->
-  directAttr = directAttributes[attr]
-  if directAttr
-    el[directAttr]
+  directAttr = attrMap[attr]
+  el[directAttr] if directAttr
 
 
 ###
@@ -242,41 +284,12 @@ exports.setAttr = (el, args...) ->
     [attr, value] = args
     if value instanceof exports.Element
       value.setAttr(el, attr)
+    else if handler = attrSetters[attr]
+      handler(el, attr, value)
     else
-      directAttr = directAttributes[attr]
-      if attr is 'style'
-        setStyleAttr(el, value)
-      else if booleanAttributes[attr]
-        if value
-          el[attr] = true
-        else
-          el.removeAttribute(attr)
-      else if not directAttr
-        el.setAttribute(attr, value)
-      else
-        if attr is 'html' and typeof value isnt 'string'
-          el.removeChild(el.lastChild) while el.lastChild
-          if isElement(value)
-            el.appendChild(value)
-          else if value instanceof Array
-            exports.appendChildren(el, value)
-        else if attr is 'text' and isText(el)
-          el.nodeValue = value
-        else
-          el[directAttr] = value
+      el.setAttribute(attr, value)
   null
 
-
-setStyleAttr = (el, styleValue) ->
-  if typeof styleValue is 'string'
-    el.setAttribute('style', styleValue)
-  else
-    for own key, val of styleValue
-      if val instanceof exports.Element
-        val.setAttr(el, 'style', key)
-      else
-        el.style[key] = val
-  null
 
 class SafeString extends exports.Element
   toString: -> @value
