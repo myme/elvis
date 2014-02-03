@@ -6,9 +6,9 @@
 
   el = this.elvis;
 
-  virtual = function() {
+  virtual = function(fname) {
     return function() {
-      throw new Exception('Must be implemented in sub class');
+      throw new Exception("" + fname + " must be implemented in sub class");
     };
   };
 
@@ -93,7 +93,7 @@
       return this._element;
     };
 
-    Binding.prototype.getValue = virtual();
+    Binding.prototype.getValue = virtual('getValue');
 
     Binding.prototype._getValue = function() {
       var attr, transform, values;
@@ -117,14 +117,15 @@
       }
     };
 
-    Binding.prototype.setAttr = function(obj, attribute) {
-      var attr, _i, _len, _ref,
+    Binding.prototype.setAttr = function() {
+      var attr, obj, path, _i, _len, _ref,
         _this = this;
+      obj = arguments[0], path = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       this.toObj = obj;
-      this.toAttr = attribute;
-      if (obj.tagName === 'INPUT' && attribute === 'value') {
+      this.toAttr = path;
+      if (obj.tagName === 'INPUT' && path[0] === 'value') {
         el.on(obj, 'change', function() {
-          return _this.updateModel(obj[attribute]);
+          return _this.updateModel(obj.value);
         });
       }
       _ref = this.attrs;
@@ -135,12 +136,21 @@
       return this.update();
     };
 
-    Binding.prototype.setValue = virtual();
+    Binding.prototype.setValue = virtual('setValue');
 
-    Binding.prototype.subscribe = virtual();
+    Binding.prototype.subscribe = virtual('subscribe');
 
     Binding.prototype.update = function() {
-      return el.setAttr(this.toObj, this.toAttr, this._getValue());
+      var attr, part, tmp, _i, _len, _ref;
+      attr = this._getValue();
+      _ref = this.toAttr.slice().reverse();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        part = _ref[_i];
+        tmp = {};
+        tmp[part] = attr;
+        attr = tmp;
+      }
+      return el.setAttr(this.toObj, attr);
     };
 
     Binding.prototype.updateModel = function(value) {

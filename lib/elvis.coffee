@@ -270,6 +270,7 @@ setStyleAttr = (el, styleValue) ->
         val.setAttr(el, 'style', key)
       else
         el.style[key] = val
+  null
 
 class SafeString extends exports.Element
   toString: -> @value

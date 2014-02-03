@@ -9,10 +9,13 @@
 
 ## Release notes
 
+### v0.3.0 (2014-02-03)
+
+ * Add support for setting `style` attributes directly and with bindings
+
 ### v0.2.7 (2014-01-06)
 
  * Add `.bindTo` to Backbone Views
- * Add support for setting `style` attributes directly and with bindings
 
 ### v0.2.6 (2013-11-11)
 

@@ -1,5 +1,5 @@
 (function() {
-  var ELEMENT_NODE, SafeString, TEXT_NODE, booleanAttributes, canAppend, directAttributes, doc, exports, isElement, isText, merge, normalizeArguments, oldSafe, parseAttrString, parseTagSpec, textAttr, textNode, _ref,
+  var ELEMENT_NODE, SafeString, TEXT_NODE, booleanAttributes, canAppend, directAttributes, doc, exports, isElement, isText, merge, normalizeArguments, oldSafe, parseAttrString, parseTagSpec, setStyleAttr, textAttr, textNode, _ref,
     __hasProp = {}.hasOwnProperty,
     __slice = [].slice,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -310,7 +310,9 @@
         value.setAttr(el, attr);
       } else {
         directAttr = directAttributes[attr];
-        if (booleanAttributes[attr]) {
+        if (attr === 'style') {
+          setStyleAttr(el, value);
+        } else if (booleanAttributes[attr]) {
           if (value) {
             el[attr] = true;
           } else {
@@ -333,6 +335,24 @@
           } else {
             el[directAttr] = value;
           }
+        }
+      }
+    }
+    return null;
+  };
+
+  setStyleAttr = function(el, styleValue) {
+    var key, val;
+    if (typeof styleValue === 'string') {
+      el.setAttribute('style', styleValue);
+    } else {
+      for (key in styleValue) {
+        if (!__hasProp.call(styleValue, key)) continue;
+        val = styleValue[key];
+        if (val instanceof exports.Element) {
+          val.setAttr(el, 'style', key);
+        } else {
+          el.style[key] = val;
         }
       }
     }
