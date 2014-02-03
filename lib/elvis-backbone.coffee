@@ -1,8 +1,8 @@
 el = @elvis
 
 
-virtual = -> ->
-  throw new Exception('Must be implemented in sub class')
+virtual = (fname) -> ->
+  throw new Exception("#{fname} must be implemented in sub class")
 
 
 ###
@@ -73,7 +73,7 @@ class Binding extends el.Element
       @setAttr(@_element, 'text')
     @_element
 
-  getValue: virtual()
+  getValue: virtual('getValue')
 
   _getValue: ->
     values = (@getValue(attr) for attr in @attrs)
@@ -93,9 +93,9 @@ class Binding extends el.Element
     @subscribe(attr) for attr in @attrs
     @update()
 
-  setValue: virtual()
+  setValue: virtual('setValue')
 
-  subscribe: virtual()
+  subscribe: virtual('subscribe')
 
   update: ->
     attr = @_getValue()
