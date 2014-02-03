@@ -111,6 +111,13 @@ describe 'elvis', ->
       expect(element.href).to.match(new RegExp('/foo/bar'))
       expect(element.innerHTML).to.equal('foo bar')
 
+    it 'style attributes with object', ->
+      element = el 'div', style:
+        left: '10px'
+        marginLeft: '30px'
+      expect(element.style.left).to.equal('10px')
+      expect(element.style.marginLeft).to.equal('30px')
+
   describe 'can append', ->
     it 'element text as second argument', ->
       element = el('div', 'foo bar')

@@ -238,7 +238,9 @@ exports.setAttr = (el, args...) ->
       value.setAttr(el, attr)
     else
       directAttr = directAttributes[attr]
-      if booleanAttributes[attr]
+      if attr is 'style'
+        setStyleAttr(el, value)
+      else if booleanAttributes[attr]
         if value
           el[attr] = true
         else
@@ -258,6 +260,12 @@ exports.setAttr = (el, args...) ->
           el[directAttr] = value
   null
 
+
+setStyleAttr = (el, value) ->
+  if typeof value is 'string'
+    el.setAttribute('style', value)
+  else
+    el.style[attr] = v for own attr, v of value
 
 class SafeString extends exports.Element
   toString: -> @value
