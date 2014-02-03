@@ -87,6 +87,11 @@ describe 'elvis', ->
       expect(element.tagName).to.equal('DIV')
       expect(element.className).to.equal('bar')
 
+    it.skip 'tag with class added to className', ->
+      element = el('div.foo', addClass: 'bar')
+      expect(element.tagName).to.equal('DIV')
+      expect(element.className).to.equal('foo bar')
+
     it 'tag with tag attributes overridden', ->
       element = el('a(href="/foo/bar")', href: '/baz/quux')
       expect(element.tagName).to.equal('A')
