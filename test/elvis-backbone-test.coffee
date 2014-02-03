@@ -58,7 +58,7 @@ describe 'Elvis Backbone.Model', ->
     model.set(baz: 'xuuq')
     expect(element.innerHTML).to.equal('rab xuuq')
 
-  it 'can transform space separated attributes', ->
+  it 'can transform multiple attributes', ->
     model = new Backbone.Model(income: 9000, expenses: 7000)
     displayProfit = (i, e) -> "Profit: " + (i - e)
     binding = model.bindTo(['income', 'expenses']).get(displayProfit)
@@ -102,6 +102,8 @@ describe 'Elvis Backbone.Model', ->
     expect(model.get('firstName')).to.equal('John')
     expect(model.get('lastName')).to.equal('Doe')
 
+
+describe 'Elvis Backbone.View', ->
   it 'can bind using bindTo in a Backbone View', ->
     class View extends Backbone.View
       render: ->
