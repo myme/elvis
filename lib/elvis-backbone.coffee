@@ -77,9 +77,8 @@ class Binding extends el.Element
 
   _getValue: ->
     values = (@getValue(attr) for attr in @attrs)
-    transform = @_getTransform
-    if transform
-      transform(values...)
+    if transform = @_getTransform
+      transform.call(@context, values...)
     else if values.length > 1
       values.join(' ')
     else

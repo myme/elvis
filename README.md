@@ -9,6 +9,10 @@
 
 ## Release notes
 
+### v0.3.1 (UNRELEASED)
+
+ * Call transform function with proper context
+
 ### v0.3.0 (2014-02-03)
 
  * Add support for setting `style` attributes directly and with bindings

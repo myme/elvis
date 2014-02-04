@@ -29,6 +29,13 @@ describe 'Elvis Backbone.Model', ->
     model.set(foo: 'quux')
     expect(element.innerHTML).to.equal('xuuq')
 
+  it 'calls transform with proper context', ->
+    model = new Backbone.Model(foo: 'bar')
+    spy = sinon.spy()
+    element = el('div', model.bindTo('foo').get(spy))
+    spy.should.have.been.calledWith('bar')
+    spy.should.have.been.calledOn(model)
+
   it 'can bind to attributes', ->
     model = new Backbone.Model(foo: 'bar')
     element = el('div', className: model.bindTo('foo'))
@@ -131,6 +138,22 @@ describe 'Elvis Backbone.View', ->
 
     model.set(value: 'bar')
     expect(view.el.innerHTML).to.equal('bar')
+
+  it 'calls transform with proper context', ->
+    class View extends Backbone.View
+      transform: (value) -> value
+      render: ->
+        el(@el, @bindTo('value').get(@transform))
+        this
+
+    model = new Backbone.Model(value: 'foo')
+    view = new View(model: model).render()
+    spy = sinon.spy(view, 'transform')
+    view.render()
+
+    spy.should.be.calledOnce
+    spy.should.be.calledWith('foo')
+    spy.should.be.calledOn(view)
 
   it 'removes Backbone View bindings when the view is destroyed', ->
     binding = null
