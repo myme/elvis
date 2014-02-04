@@ -12,6 +12,7 @@
 ### v0.3.1 (UNRELEASED)
 
  * Call transform function with proper context
+ * Handle `number` and `boolean` types equal to `string`
 
 ### v0.3.0 (2014-02-03)
 
