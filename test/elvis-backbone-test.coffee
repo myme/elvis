@@ -125,51 +125,47 @@ describe 'Elvis Backbone.Model', ->
 
 
 describe 'Elvis Backbone.View', ->
+  class View extends Backbone.View
+    transform: (value) -> value
+    render: ->
+      el(@el, @_binding = @bindTo('value').get(@transform))
+      this
+
+  beforeEach ->
+    @model = new Backbone.Model(value: 'foo')
+    @view = new View(model: @model)
+
   it 'can bind using bindTo in a Backbone View', ->
-    class View extends Backbone.View
-      render: ->
-        el(@el, @bindTo('value'))
-        this
+    @view.render()
+    expect(@view.el.innerHTML).to.equal('foo')
 
-    model = new Backbone.Model(value: 'foo')
-    view = new View(model: model).render()
-
-    expect(view.el.innerHTML).to.equal('foo')
-
-    model.set(value: 'bar')
-    expect(view.el.innerHTML).to.equal('bar')
+    @model.set(value: 'bar')
+    expect(@view.el.innerHTML).to.equal('bar')
 
   it 'calls transform with proper context', ->
-    class View extends Backbone.View
-      transform: (value) -> value
-      render: ->
-        el(@el, @bindTo('value').get(@transform))
-        this
-
-    model = new Backbone.Model(value: 'foo')
-    view = new View(model: model).render()
-    spy = sinon.spy(view, 'transform')
-    view.render()
+    spy = sinon.spy(@view, 'transform')
+    @view.render()
 
     spy.should.be.calledOnce
     spy.should.be.calledWith('foo')
-    spy.should.be.calledOn(view)
+    spy.should.be.calledOn(@view)
+
+  it 'calls transform with proper context', ->
+    spy = sinon.spy(@view, 'transform')
+    @view.render()
+
+    spy.should.be.calledOnce
+    spy.should.be.calledWith('foo')
+    spy.should.be.calledOn(@view)
 
   it 'removes Backbone View bindings when the view is destroyed', ->
-    binding = null
-    class View extends Backbone.View
-      render: ->
-        el(@el, binding = @bindTo('value'))
-        this
+    @view.render()
+    spy = sinon.spy(@view._binding, 'update')
 
-    model = new Backbone.Model(value: 'foo')
-    view = new View(model: model).render()
-    spy = sinon.spy(binding, 'update')
-
-    model.set(value: 'bar')
-    expect(spy).to.be.calledOnce
+    @model.set(value: 'bar')
+    spy.should.be.calledOnce
     spy.reset()
 
-    view.remove()
-    model.set(value: 'quux')
-    expect(spy).to.not.be.called
+    @view.remove()
+    @model.set(value: 'quux')
+    spy.should.not.be.called
