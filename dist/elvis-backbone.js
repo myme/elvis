@@ -107,9 +107,8 @@
         }
         return _results;
       }).call(this);
-      transform = this._getTransform;
-      if (transform) {
-        return transform.apply(null, values);
+      if (transform = this._getTransform) {
+        return transform.call.apply(transform, [this.context].concat(__slice.call(values)));
       } else if (values.length > 1) {
         return values.join(' ');
       } else {
