@@ -20,13 +20,19 @@ merge = (left, right) ->
   dest
 
 
-canAppend = (el) ->
-  (
-    typeof el is 'string' or
-    isElement(el) or
-    isText(el) or
-    el instanceof exports.Element
-  )
+isNative = (el) -> (
+  typeof el is 'boolean' or
+  typeof el is 'number' or
+  typeof el is 'string'
+)
+
+
+canAppend = (el) -> (
+  isNative(el) or
+  isElement(el) or
+  isText(el) or
+  el instanceof exports.Element
+)
 
 
 normalizeArguments = (args) ->
@@ -182,7 +188,7 @@ exports.appendChildren = (el, children) ->
       if child instanceof Array
         exports.appendChildren(fragment, child)
         continue
-      if typeof child is 'string'
+      if isNative(child)
         child = new exports.Element(child)
       if child instanceof exports.Element
         child = child.getElement()

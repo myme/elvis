@@ -134,6 +134,17 @@ describe 'elvis', ->
       expect(element.tagName).to.equal('DIV')
       expect(element.innerHTML).to.equal('foo bar')
 
+    it 'numbers as second argument', ->
+      element = el('div', 10)
+      expect(element.tagName).to.equal('DIV')
+      expect(element.innerHTML).to.equal('10')
+
+    it 'numbers as third argument', ->
+      element = el('div', className: 'foo', 10)
+      expect(element.tagName).to.equal('DIV')
+      expect(element.className).to.equal('foo')
+      expect(element.innerHTML).to.equal('10')
+
     it 'element child', ->
       element = el('div', el('em', 'foo'))
       expect(element.innerHTML).to.equal('<em>foo</em>')
