@@ -134,16 +134,25 @@ describe 'elvis', ->
       expect(element.tagName).to.equal('DIV')
       expect(element.innerHTML).to.equal('foo bar')
 
-    it 'numbers as second argument', ->
+    it 'booleans or numbers as second argument', ->
       element = el('div', 10)
       expect(element.tagName).to.equal('DIV')
       expect(element.innerHTML).to.equal('10')
 
-    it 'numbers as third argument', ->
+      element = el('div', true)
+      expect(element.tagName).to.equal('DIV')
+      expect(element.innerHTML).to.equal('true')
+
+    it 'booleans or numbers as third argument', ->
       element = el('div', className: 'foo', 10)
       expect(element.tagName).to.equal('DIV')
       expect(element.className).to.equal('foo')
       expect(element.innerHTML).to.equal('10')
+
+      element = el('div', className: 'foo', true)
+      expect(element.tagName).to.equal('DIV')
+      expect(element.className).to.equal('foo')
+      expect(element.innerHTML).to.equal('true')
 
     it 'element child', ->
       element = el('div', el('em', 'foo'))
