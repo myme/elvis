@@ -1,5 +1,5 @@
 (function() {
-  var ELEMENT_NODE, SafeString, TEXT_NODE, booleanAttributes, canAppend, directAttributes, doc, exports, isElement, isText, merge, normalizeArguments, oldSafe, parseAttrString, parseTagSpec, setStyleAttr, textAttr, textNode, _ref,
+  var ELEMENT_NODE, SafeString, TEXT_NODE, booleanAttributes, canAppend, directAttributes, doc, exports, isElement, isNative, isText, merge, normalizeArguments, oldSafe, parseAttrString, parseTagSpec, setStyleAttr, textAttr, textNode, _ref,
     __hasProp = {}.hasOwnProperty,
     __slice = [].slice,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -34,8 +34,12 @@
     return dest;
   };
 
+  isNative = function(el) {
+    return typeof el === 'boolean' || typeof el === 'number' || typeof el === 'string';
+  };
+
   canAppend = function(el) {
-    return typeof el === 'string' || isElement(el) || isText(el) || el instanceof exports.Element;
+    return isNative(el) || isElement(el) || isText(el) || el instanceof exports.Element;
   };
 
   normalizeArguments = function(args) {
@@ -234,7 +238,7 @@
           exports.appendChildren(fragment, child);
           continue;
         }
-        if (typeof child === 'string') {
+        if (isNative(child)) {
           child = new exports.Element(child);
         }
         if (child instanceof exports.Element) {

@@ -9,7 +9,7 @@
 
 ## Release notes
 
-### v0.3.1 (UNRELEASED)
+### v0.3.1 (2014-02-24)
 
  * Call transform function with proper context
  * Handle `number` and `boolean` types equal to `string`
