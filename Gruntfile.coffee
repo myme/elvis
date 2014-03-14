@@ -1,7 +1,11 @@
 module.exports = (grunt) ->
 
+  pkg = grunt.file.readJSON('package.json')
   grunt.initConfig
-    pkg: grunt.file.readJSON('package.json')
+    meta:
+      name: pkg.name
+      version: pkg.version
+      license: grunt.file.read('LICENSE-ISC')
 
     coffee:
       dist:
@@ -30,7 +34,24 @@ module.exports = (grunt) ->
           frameworks: ['mocha', 'chai', 'sinon-chai']
           singleRun: true
 
+    usebanner:
+      dist:
+        options:
+          position: 'top'
+          linebreak: true
+          banner: '''
+            /*
+            <%= meta.name %> <%= meta.version %> -- <%= grunt.template.today("yyyy-mm-dd") %>
+
+            <%= meta.license %>
+            */
+          '''
+        files:
+          src: 'dist/*.js'
+
     uglify:
+      options:
+        banner: '<%= meta.banner %>'
       dist:
         files:
           'dist/elvis.min.js': 'dist/elvis.js'
@@ -44,6 +65,7 @@ module.exports = (grunt) ->
         ]
         tasks: ['test']
 
+  grunt.loadNpmTasks('grunt-banner')
   grunt.loadNpmTasks('grunt-coffeelint')
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-uglify')
@@ -52,5 +74,5 @@ module.exports = (grunt) ->
 
   grunt.registerTask('lint', ['coffeelint'])
   grunt.registerTask('test', ['lint', 'karma'])
-  grunt.registerTask('build', ['test', 'coffee', 'uglify'])
+  grunt.registerTask('build', ['test', 'coffee', 'uglify', 'usebanner'])
   grunt.registerTask('default', ['build'])

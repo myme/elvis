@@ -20,7 +20,9 @@
   "devDependencies": {
     "bower": "~1.2.6",
     "grunt": "~0.4.1",
+    "grunt-banner": "^0.2.2",
     "grunt-cli": "~0.1.8",
+    "grunt-coffeelint": "0.0.7",
     "grunt-contrib-coffee": "~0.7.0",
     "grunt-contrib-uglify": "~0.2.1",
     "grunt-contrib-watch": "~0.4.3",
@@ -35,7 +37,6 @@
     "karma-mocha": "~0.1.0",
     "karma-phantomjs-launcher": "~0.1.0",
     "karma-requirejs": "~0.1.0",
-    "karma-script-launcher": "~0.1.0",
-    "grunt-coffeelint": "0.0.7"
+    "karma-script-launcher": "~0.1.0"
   }
 }
