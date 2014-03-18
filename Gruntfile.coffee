@@ -32,6 +32,8 @@ module.exports = (grunt) ->
             'test/**/*.coffee'
           ]
           frameworks: ['mocha', 'chai', 'sinon-chai']
+          preprocessors:
+            '**/*.coffee': 'coffee'
           singleRun: true
 
     usebanner:
