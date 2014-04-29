@@ -17,13 +17,6 @@ el(document.body, [
 ]);
 ```
 
-## Perform release
-
- * Update `Release notes`
- * Bump `package.json` and `bower.json` version numbers
- * Run `npm run-script build` to update all distribution sources
- * `git tag -a <tag>` with the appropriate version number
-
 ## Release notes
 
 ### v0.3.1 (2014-02-24)
@@ -78,3 +71,10 @@ el(document.body, [
 ### v0.1.0
 
  * Initial release
+
+## Perform release
+
+ * Update `Release notes`
+ * Bump `package.json` and `bower.json` version numbers
+ * Run `npm run-script build` to update all distribution sources
+ * `git tag -a <tag>` with the appropriate version number
