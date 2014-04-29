@@ -1,5 +1,22 @@
 # Elv.js [![Build Status](https://travis-ci.org/myme/elvis.png?branch=master)](https://travis-ci.org/myme/elvis)
 
+Elvis is a JavaScript library for creating and building DOM elements programmatically. It does this using native, cross-browser APIs (`createElement` et al). Elvis works like a template library, except without having to compile templates from strings. DOM generating code must also be valid JavaScript, and it really shines when used with a transpiled language like CoffeeScript. It is inspired by template languages like Jade and HAML.
+
+```javascript
+var el = elvis;
+
+el(document.body, [
+  el('nav', el('ul', [
+    el('li', el('a(href="/")',     'Home')),
+    el('li', el('a(href="/news")', 'News')),
+    ...
+  ])),
+  el('#contents', [
+    el('span.my-class', 'Hello, World!')
+  ])
+]);
+```
+
 ## Perform release
 
  * Update `Release notes`
