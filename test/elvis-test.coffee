@@ -275,6 +275,11 @@ describe 'elvis.setAttr', ->
     el.setAttr(element, 'id', 'some-id')
     expect(element.id).to.equal('some-id')
 
+  it 'can set element classList', ->
+    element = el()
+    el.setAttr(element, 'classList', ['foo', 'bar', 'baz'])
+    expect(element.className).to.equals('foo bar baz')
+
   it 'can set element className', ->
     element = el()
     el.setAttr(element, 'className', 'class1 class2')

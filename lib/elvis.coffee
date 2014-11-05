@@ -244,7 +244,9 @@ exports.setAttr = (el, args...) ->
       value.setAttr(el, attr)
     else
       directAttr = directAttributes[attr]
-      if attr is 'style'
+      if attr is 'classList'
+        setClassList(el, value)
+      else if attr is 'style'
         setStyleAttr(el, value)
       else if booleanAttributes[attr]
         if value
@@ -265,6 +267,20 @@ exports.setAttr = (el, args...) ->
         else
           el[directAttr] = value
   null
+
+
+setClassList = (el, classList) ->
+  classes = []
+
+  for className in classList
+    if className instanceof exports.Element
+      value = className.getValue()
+      console.log(value)
+      classes.push(value)
+    else
+      classes.push(className)
+
+  el.className = classes.join(' ')
 
 
 setStyleAttr = (el, styleValue) ->

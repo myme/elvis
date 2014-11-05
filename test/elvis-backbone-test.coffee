@@ -43,6 +43,16 @@ describe 'Elvis Backbone.Model', ->
     model.set(foo: 'quux')
     expect(element.className).to.equal('quux')
 
+  it 'can bind classes with classList', ->
+    model = new Backbone.Model(visible: true)
+    element = el 'div',
+      classList: [
+        model.bindTo('visible').get (visible) ->
+          if visible then 'visible' else 'hidden'
+      ]
+
+    expect(element.className).to.equal('visible')
+
   it 'can bind to style attributes', ->
     model = new Backbone.Model(left: '10px', margin: '3em')
     element = el 'div', style:
