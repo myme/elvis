@@ -70,7 +70,7 @@ describe 'Elvis Backbone.Model', ->
       html is '<button disabled="disabled"></button>'
     ).to.be.true
 
-  it 'can bound to multiple attributes', ->
+  it 'can bind to multiple attributes', ->
     model = new Backbone.Model(foo: 'bar', baz: 'quux')
     element = el('div', model.bindTo(['foo', 'baz']))
     expect(element.innerHTML).to.equal('bar quux')
