@@ -4,7 +4,7 @@
   "description": "Generate DOM without templates",
   "scripts": {
     "build": "grunt build",
-    "prepublish": "bower install",
+    "prepublish": "bower install && grunt build",
     "start": "grunt -f test watch",
     "test": "grunt test"
   },

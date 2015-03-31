@@ -10,12 +10,12 @@ module.exports = (grunt) ->
     coffee:
       dist:
         files:
-          'dist/elvis.js': ['lib/elvis.coffee']
-          'dist/elvis-backbone.js': ['lib/elvis-backbone.coffee']
+          'lib/elvis.js': ['src/elvis.coffee']
+          'lib/elvis-backbone.js': ['src/elvis-backbone.coffee']
 
     coffeelint:
       all: [
-        'lib/**/*.coffee'
+        'src/**/*.coffee'
         'test/**/*.coffee'
       ]
 
@@ -27,8 +27,8 @@ module.exports = (grunt) ->
             'bower_components/jquery/jquery.js'
             'bower_components/underscore/underscore.js'
             'bower_components/backbone/backbone.js'
-            'lib/elvis.coffee'
-            'lib/elvis-backbone.coffee'
+            'src/elvis.coffee'
+            'src/elvis-backbone.coffee'
             'test/**/*.coffee'
           ]
           frameworks: ['mocha', 'chai', 'sinon-chai']
@@ -49,20 +49,20 @@ module.exports = (grunt) ->
             */
           '''
         files:
-          src: 'dist/*.js'
+          src: 'lib/*.js'
 
     uglify:
       options:
         banner: '<%= meta.banner %>'
       dist:
         files:
-          'dist/elvis.min.js': 'dist/elvis.js'
-          'dist/elvis-backbone.min.js': 'dist/elvis-backbone.js'
+          'lib/elvis.min.js': 'lib/elvis.js'
+          'lib/elvis-backbone.min.js': 'lib/elvis-backbone.js'
 
     watch:
       test:
         files: [
-          'lib/**/*.coffee'
+          'src/**/*.coffee'
           'test/**/*.coffee'
         ]
         tasks: ['test']
