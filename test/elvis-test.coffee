@@ -1,9 +1,14 @@
-el = @elvis
+{expect} = require('chai')
+sinon = require('sinon')
+
+el = require('../lib/elvis')
+
 
 createEvent = (type) ->
   event = document.createEvent('HTMLEvents')
   event.initEvent(type, true, false)
   event
+
 
 describe 'elvis', ->
   describe 'can create', ->

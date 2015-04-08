@@ -19,23 +19,6 @@ module.exports = (grunt) ->
         'test/**/*.coffee'
       ]
 
-    karma:
-      test:
-        options:
-          browsers: ['PhantomJS']
-          files: [
-            'bower_components/jquery/jquery.js'
-            'bower_components/underscore/underscore.js'
-            'bower_components/backbone/backbone.js'
-            'lib/elvis.coffee'
-            'lib/elvis-backbone.coffee'
-            'test/**/*.coffee'
-          ]
-          frameworks: ['mocha', 'chai', 'sinon-chai']
-          preprocessors:
-            '**/*.coffee': 'coffee'
-          singleRun: true
-
     usebanner:
       dist:
         options:

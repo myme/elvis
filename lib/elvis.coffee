@@ -1,4 +1,4 @@
-doc = @document
+doc = window.document
 
 
 ELEMENT_NODE = 1
@@ -101,7 +101,7 @@ parseTagSpec = (tagSpec) ->
   Description:
     Main element creation function.
 ###
-@elvis = exports = (tagSpecOrEl, args...) ->
+module.exports = exports = (tagSpecOrEl, args...) ->
   [attributes, children] = normalizeArguments(args)
 
   if isElement(tagSpecOrEl)

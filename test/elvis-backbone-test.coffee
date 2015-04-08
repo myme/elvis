@@ -1,4 +1,11 @@
-el = @elvis
+Backbone = require('backbone')
+chai = require('chai')
+sinon = require('sinon')
+chai.use(require('sinon-chai'))
+{expect} = chai
+
+el = require('../lib/elvis-backbone')
+
 
 createEvent = (type) ->
   event = document.createEvent('HTMLEvents')
@@ -33,8 +40,8 @@ describe 'Elvis Backbone.Model', ->
     model = new Backbone.Model(foo: 'bar')
     spy = sinon.spy()
     element = el('div', model.bindTo('foo').get(spy))
-    spy.should.have.been.calledWith('bar')
-    spy.should.have.been.calledOn(model)
+    expect(spy).to.have.been.calledWith('bar')
+    expect(spy).to.have.been.calledOn(model)
 
   it 'can bind to attributes', ->
     model = new Backbone.Model(foo: 'bar')

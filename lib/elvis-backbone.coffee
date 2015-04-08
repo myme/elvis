@@ -1,4 +1,6 @@
-el = @elvis
+Backbone = require('backbone')
+
+module.exports = el = require('./elvis')
 
 
 virtual = (fname) -> ->
