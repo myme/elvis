@@ -1,4 +1,8 @@
-# Elvis [![Build Status](https://travis-ci.org/myme/elvis.png?branch=master)](https://travis-ci.org/myme/elvis)
+# Elvis
+
+[![Latest npm version](https://img.shields.io/npm/v/elvis.svg?style=flat)](https://www.npmjs.org/package/elvis)
+[![Number of npm downloads](https://img.shields.io/npm/dm/elvis.svg?style=flat)](https://www.npmjs.org/package/elvis)
+[![Build Status](https://img.shields.io/travis/myme/elvis.svg?style=flat)](https://travis-ci.org/myme/elvis)
 
 Elvis is a JavaScript library for creating and building DOM elements programmatically. It does this using native, cross-browser APIs (`createElement` et al). Elvis works like a template library, except without having to compile templates from strings. DOM generating code must also be valid JavaScript, and it really shines when used with a transpiled language like CoffeeScript. It is inspired by template languages like Jade and HAML.
 
