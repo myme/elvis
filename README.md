@@ -23,6 +23,10 @@ el(document.body, [
 
 ## Release notes
 
+### v1.0.0 (2015-05-29)
+
+ * Make elvis npm compatible
+
 ### v0.3.1 (2014-02-24)
 
  * Call transform function with proper context

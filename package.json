@@ -1,7 +1,11 @@
 {
   "name": "elvis",
-  "version": "0.3.1",
+  "version": "1.0.0",
   "description": "Generate DOM without templates",
+  "main": "./lib/elvis.js",
+  "browser": {
+    "jsdom": false
+  },
   "scripts": {
     "build": "grunt build",
     "prepublish": "bower install && grunt build",
@@ -17,6 +21,9 @@
   ],
   "author": "Martin Øinæs Myrseth",
   "license": "ISC",
+  "dependencies": {
+    "jsdom": "^3.1.2"
+  },
   "devDependencies": {
     "bower": "^1.4.1",
     "coffeelint": "^1.9.7",

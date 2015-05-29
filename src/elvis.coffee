@@ -1,4 +1,6 @@
-doc = @document
+doc = window?.document
+if not doc
+  doc = require('jsdom').jsdom()
 
 
 ELEMENT_NODE = 1
@@ -31,7 +33,7 @@ canAppend = (el) -> (
   isNative(el) or
   isElement(el) or
   isText(el) or
-  el instanceof exports.Element
+  el instanceof elvis.Element
 )
 
 
@@ -101,7 +103,7 @@ parseTagSpec = (tagSpec) ->
   Description:
     Main element creation function.
 ###
-@elvis = exports = (tagSpecOrEl, args...) ->
+elvis = (tagSpecOrEl, args...) ->
   [attributes, children] = normalizeArguments(args)
 
   if isElement(tagSpecOrEl)
@@ -112,7 +114,7 @@ parseTagSpec = (tagSpec) ->
     el = doc.createElement(tag)
 
   attributes.html = children if children.length
-  exports.setAttr(el, attributes)
+  elvis.setAttr(el, attributes)
 
   el
 
@@ -125,14 +127,14 @@ parseTagSpec = (tagSpec) ->
     can be used as a base class for plugins which wish to perform special
     behavior when elements are added to the DOM or set as element attributes.
 ###
-class exports.Element
+class elvis.Element
   constructor: (@value) ->
   getElement: -> textNode(@value)
   setAttr: (obj, attr) ->
-    exports.setAttr(obj, attr, @value)
+    elvis.setAttr(obj, attr, @value)
 
 
-exports.on = (element, event, callback) ->
+elvis.on = (element, event, callback) ->
   element.addEventListener(event, callback)
 
 
@@ -142,7 +144,7 @@ exports.on = (element, event, callback) ->
   Description:
     Create a plain text node.
 ###
-exports.text = textNode = (text) ->
+elvis.text = textNode = (text) ->
   doc.createTextNode(text)
 
 
@@ -181,16 +183,16 @@ booleanAttributes =
   Description:
     Appends child elements to an HTML element.
 ###
-exports.appendChildren = (el, children) ->
+elvis.appendChildren = (el, children) ->
   if children.length
     fragment = doc.createDocumentFragment()
     for child in children when child
       if child instanceof Array
-        exports.appendChildren(fragment, child)
+        elvis.appendChildren(fragment, child)
         continue
       if isNative(child)
-        child = new exports.Element(child)
-      if child instanceof exports.Element
+        child = new elvis.Element(child)
+      if child instanceof elvis.Element
         child = child.getElement()
       fragment.appendChild(child)
     el.appendChild(fragment)
@@ -202,19 +204,19 @@ exports.appendChildren = (el, children) ->
   Description:
     Generates `element.style`-compatible CSS strings.
 ###
-exports.css = (styles) ->
+elvis.css = (styles) ->
   output = []
   for own key of styles
     value = styles[key]
     if typeof value is 'string'
       output.push("#{key}:#{value};")
     else
-      css = exports.css(value)
+      css = elvis.css(value)
       output.push("#{key}{#{css}}")
   output.join('')
 
 
-exports.getAttr = (el, attr) ->
+elvis.getAttr = (el, attr) ->
   directAttr = directAttributes[attr]
   if directAttr
     el[directAttr]
@@ -234,13 +236,13 @@ exports.getAttr = (el, attr) ->
   Description:
     Sets element attributes in a consistent way.
 ###
-exports.setAttr = (el, args...) ->
+elvis.setAttr = (el, args...) ->
   if args.length is 1
     for own attr, value of args[0]
-      exports.setAttr(el, attr, value)
+      elvis.setAttr(el, attr, value)
   else
     [attr, value] = args
-    if value instanceof exports.Element
+    if value instanceof elvis.Element
       value.setAttr(el, attr)
     else
       directAttr = directAttributes[attr]
@@ -259,7 +261,7 @@ exports.setAttr = (el, args...) ->
           if isElement(value)
             el.appendChild(value)
           else if value instanceof Array
-            exports.appendChildren(el, value)
+            elvis.appendChildren(el, value)
         else if attr is 'text' and isText(el)
           el.nodeValue = value
         else
@@ -272,16 +274,16 @@ setStyleAttr = (el, styleValue) ->
     el.setAttribute('style', styleValue)
   else
     for own key, val of styleValue
-      if val instanceof exports.Element
+      if val instanceof elvis.Element
         val.setAttr(el, 'style', key)
       else
         el.style[key] = val
   null
 
-class SafeString extends exports.Element
+class SafeString extends elvis.Element
   toString: -> @value
   getElement: ->
-    nodes = exports('div', html: @value).childNodes
+    nodes = elvis('div', html: @value).childNodes
     fragment = doc.createDocumentFragment()
     fragment.appendChild(nodes[0]) while nodes.length
     fragment
@@ -297,7 +299,7 @@ class SafeString extends exports.Element
     Marks a string value as "safe" which means that it will not be escaped when
     injected into the DOM.
 ###
-exports.safe = (args...) ->
+elvis.safe = (args...) ->
   new SafeString(args...)
 
 
@@ -315,9 +317,9 @@ oldSafe = null
     Add a function with name 'safe' to the String prototype, in order to
     simplify marking strings as safe, e.g. they will not be escaped.
 ###
-exports.infectString = ->
+elvis.infectString = ->
   oldSafe = String::safe
-  String::safe = -> exports.safe(@toString())
+  String::safe = -> elvis.safe(@toString())
 
 
 ###
@@ -330,9 +332,18 @@ exports.infectString = ->
   Description:
     Restore the String prototype, removing injected functions.
 ###
-exports.restoreString = ->
+elvis.restoreString = ->
   if oldSafe
     String::safe = oldSafe
   else
     delete String::safe
   oldSafe = null
+
+
+elvis.document = doc
+
+
+if module?.exports?
+  module.exports = elvis
+else
+  @elvis = elvis
