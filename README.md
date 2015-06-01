@@ -23,6 +23,10 @@ el(document.body, [
 
 ## Release notes
 
+### v1.0.1 (2015-06-01)
+
+ * Restructure project to allow for separate elvis and elvis-backbone modules.
+
 ### v1.0.0 (2015-05-29)
 
  * Make elvis npm compatible
