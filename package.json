@@ -26,6 +26,7 @@
     "grunt-cli": "^0.1.13",
     "grunt-coffeelint": "0.0.13",
     "grunt-contrib-coffee": "^0.13.0",
+    "grunt-contrib-copy": "^0.8.0",
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-karma": "^0.10.1",

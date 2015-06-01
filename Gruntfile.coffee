@@ -19,6 +19,12 @@ module.exports = (grunt) ->
         'test/**/*.coffee'
       ]
 
+    copy:
+      'elvis/LICENSE-ISC': 'LICENSE-ISC'
+      'elvis/README.md': 'README.md'
+      'elvis-backbone/LICENSE-ISC': 'LICENSE-ISC'
+      'elvis-backbone/README.md': 'README.md'
+
     karma:
       test:
         options:
@@ -73,11 +79,12 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-banner')
   grunt.loadNpmTasks('grunt-coffeelint')
   grunt.loadNpmTasks('grunt-contrib-coffee')
+  grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-karma')
 
   grunt.registerTask('lint', ['coffeelint'])
   grunt.registerTask('test', ['lint', 'karma'])
-  grunt.registerTask('build', ['test', 'coffee', 'uglify', 'usebanner'])
+  grunt.registerTask('build', ['test', 'coffee', 'uglify', 'usebanner', 'copy'])
   grunt.registerTask('default', ['build'])
