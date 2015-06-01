@@ -2,7 +2,7 @@
   "name": "elvis",
   "version": "1.0.1",
   "description": "Generate DOM without templates",
-  "main": "index.js",
+  "main": "elvis.js",
   "browser": {
     "jsdom": false
   },

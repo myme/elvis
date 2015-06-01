@@ -2,6 +2,7 @@
   "name": "elvis-backbone",
   "version": "1.0.1",
   "description": "Backbone integration with Elvis",
+  "main": "elvis-backbone.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/myme/elvis.git"
