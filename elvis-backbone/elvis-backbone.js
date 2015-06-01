@@ -1,5 +1,5 @@
 /*
-elvis 1.0.0 -- 2015-05-29
+elvis 1.0.1 -- 2015-06-01
 
 Copyright (c) 2013-2014, Martin Øinæs Myrseth <myrseth@gmail.com>
 
@@ -17,12 +17,18 @@ PERFORMANCE OF THIS SOFTWARE.
 
 */
 (function() {
-  var Binding, ModelBinding, ViewBinding, el, virtual,
+  var Backbone, Binding, ModelBinding, ViewBinding, el, virtual,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty,
     slice = [].slice;
 
-  el = this.elvis;
+  if (typeof require !== "undefined" && require !== null) {
+    Backbone = require('backbone');
+    el = require('elvis');
+  } else {
+    Backbone = window.Backbone;
+    el = window.elvis;
+  }
 
   virtual = function(fname) {
     return function() {

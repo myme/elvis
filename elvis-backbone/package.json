@@ -1,0 +1,18 @@
+{
+  "name": "elvis-backbone",
+  "version": "1.0.1",
+  "description": "Backbone integration with Elvis",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/myme/elvis.git"
+  },
+  "keywords": [
+    "dom"
+  ],
+  "author": "Martin Øinæs Myrseth",
+  "license": "ISC",
+  "dependencies": {
+    "backbone": "^1.0.0",
+    "elvis": "1.0.1"
+  }
+}

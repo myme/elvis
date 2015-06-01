@@ -1,5 +1,5 @@
 /*
-elvis 1.0.0 -- 2015-05-29
+elvis 1.0.1 -- 2015-06-01
 
 Copyright (c) 2013-2014, Martin Øinæs Myrseth <myrseth@gmail.com>
 

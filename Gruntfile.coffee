@@ -10,8 +10,8 @@ module.exports = (grunt) ->
     coffee:
       dist:
         files:
-          'lib/elvis.js': ['src/elvis.coffee']
-          'lib/elvis-backbone.js': ['src/elvis-backbone.coffee']
+          'elvis/elvis.js': ['src/elvis.coffee']
+          'elvis-backbone/elvis-backbone.js': ['src/elvis-backbone.coffee']
 
     coffeelint:
       all: [
@@ -49,15 +49,18 @@ module.exports = (grunt) ->
             */
           '''
         files:
-          src: 'lib/*.js'
+          src: [
+            'elvis/*.js',
+            'elvis-backbone/*.js'
+          ]
 
     uglify:
       options:
         banner: '<%= meta.banner %>'
       dist:
         files:
-          'lib/elvis.min.js': 'lib/elvis.js'
-          'lib/elvis-backbone.min.js': 'lib/elvis-backbone.js'
+          'elvis/elvis.min.js': 'elvis/elvis.js'
+          'elvis-backbone/elvis-backbone.min.js': 'elvis-backbone/elvis-backbone.js'
 
     watch:
       test:
