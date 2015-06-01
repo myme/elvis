@@ -1,4 +1,9 @@
-el = @elvis
+if require?
+  Backbone = require('backbone')
+  el = require('elvis')
+else
+  Backbone = window.Backbone
+  el = window.elvis
 
 
 virtual = (fname) -> ->
