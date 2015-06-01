@@ -83,6 +83,7 @@ el(document.body, [
 ## Perform release
 
  * Update `Release notes`
- * Bump `package.json` and `bower.json` version numbers
+ * Bump `package.json` and `bower.json` version numbers (also in elvis/ + elvis-backbone/)
  * Run `npm run-script build` to update all distribution sources
  * `git tag -a <tag>` with the appropriate version number
+ * `npm publish` in both elvis/ + elvis-backbone/
