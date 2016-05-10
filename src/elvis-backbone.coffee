@@ -1,4 +1,4 @@
-if require?
+if typeof exports is 'object' and typeof exports.nodeName isnt 'string'
   Backbone = require('backbone')
   el = require('elvis')
 else
