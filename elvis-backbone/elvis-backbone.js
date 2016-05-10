@@ -1,5 +1,5 @@
 /*
-elvis 1.0.3 -- 2015-06-01
+elvis 1.0.4 -- 2016-05-10
 
 Copyright (c) 2013-2014, Martin Øinæs Myrseth <myrseth@gmail.com>
 
@@ -22,7 +22,7 @@ PERFORMANCE OF THIS SOFTWARE.
     hasProp = {}.hasOwnProperty,
     slice = [].slice;
 
-  if (typeof require !== "undefined" && require !== null) {
+  if (typeof exports === 'object' && typeof exports.nodeName !== 'string') {
     Backbone = require('backbone');
     el = require('elvis');
   } else {

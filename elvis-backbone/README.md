@@ -23,6 +23,10 @@ el(document.body, [
 
 ## Release notes
 
+### v1.0.4 (2016-05-10)
+
+ * Update elvis-backbone for better CommonJS support
+
 ### v1.0.3 (2015-06-01)
 
  * Restructure project to allow for separate elvis and elvis-backbone modules.

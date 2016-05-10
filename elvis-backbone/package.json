@@ -1,6 +1,6 @@
 {
   "name": "elvis-backbone",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Backbone integration with Elvis",
   "main": "elvis-backbone.js",
   "repository": {
