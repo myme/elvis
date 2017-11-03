@@ -7,7 +7,8 @@
     "build": "grunt build",
     "prepublish": "bower install && grunt build",
     "start": "grunt -f test watch",
-    "test": "grunt test"
+    "test": "grunt test",
+    "version": "node ./version.js && npm run build && git add -u"
   },
   "repository": {
     "type": "git",
