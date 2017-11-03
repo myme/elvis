@@ -1,5 +1,5 @@
 /*
-elvis 1.0.4 -- 2016-05-10
+elvis 2.0.0-0 -- 2017-11-03
 
 Copyright (c) 2013-2014, Martin Øinæs Myrseth <myrseth@gmail.com>
 
@@ -22,11 +22,7 @@ PERFORMANCE OF THIS SOFTWARE.
     slice = [].slice,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  doc = typeof window !== "undefined" && window !== null ? window.document : void 0;
-
-  if (!doc) {
-    doc = require('jsdom').jsdom();
-  }
+  doc = window.document;
 
   ELEMENT_NODE = 1;
 
