@@ -14,6 +14,6 @@
   "license": "ISC",
   "dependencies": {
     "backbone": "^1.0.0",
-    "elvis": "^1.0.3"
+    "elvis": "^2.0.0-1"
   }
 }
