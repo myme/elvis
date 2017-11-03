@@ -1,6 +1,4 @@
-doc = window?.document
-if not doc
-  doc = require('jsdom').jsdom()
+doc = window.document
 
 
 ELEMENT_NODE = 1

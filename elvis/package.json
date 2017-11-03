@@ -3,9 +3,6 @@
   "version": "1.0.4",
   "description": "Generate DOM without templates",
   "main": "elvis.js",
-  "browser": {
-    "jsdom": false
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/myme/elvis.git"
@@ -14,8 +11,5 @@
     "dom"
   ],
   "author": "Martin Øinæs Myrseth",
-  "license": "ISC",
-  "dependencies": {
-    "jsdom": "^3.1.2"
-  }
+  "license": "ISC"
 }
